@@ -16,8 +16,6 @@ body {
 
 /***** globalNavi *****/
 #globalNavi {
-    width: 567;
-    margin: 0 auto;
     border: solid #A07221;
     border-width: 3px 0;
     padding: 10px 0;
@@ -41,8 +39,8 @@ body {
     float: left;
     border-left: solid 1px #A07221;
     padding: 0 10px;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
+    /*-moz-box-sizing: border-box;
+    box-sizing: border-box;*/
     text-align: center;
     font-size: 14px;
     line-height: 1.429;
