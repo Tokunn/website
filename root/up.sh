@@ -4,5 +4,5 @@ git add .
 git commit -m "update"
 git push
 
-cd /srv/httpd/website/root/
+cd /srv/http/website/root/
 git pull
