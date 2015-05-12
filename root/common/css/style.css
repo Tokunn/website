@@ -16,6 +16,7 @@ body {
 
 /***** globalNavi *****/
 #globalNavi {
+    width: 567;
     border: solid #A07221;
     border-width: 3px 0;
     padding: 10px 0;
