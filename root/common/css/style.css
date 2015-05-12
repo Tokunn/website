@@ -35,12 +35,12 @@ body {
 
 #globalNavi ul li {
     list-style: none;
-    width: 189;
+    width: 180;
     float: left;
     border-left: solid 1px #A07221;
     padding: 0 10px;
-    /*-moz-box-sizing: border-box;
-    box-sizing: border-box;*/
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
     text-align: center;
     font-size: 14px;
     line-height: 1.429;
