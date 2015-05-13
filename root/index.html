@@ -1,32 +1,80 @@
 <!DOCTYPE html>
 <html lang="ja">
-    <article>
-        <head>
-            <meta charset="UTF-8">
-            <title>絵のない技術書</title>
-            <link rel="stylesheet" href="./common/css/normalize.css">
-            <link rel="stylesheet" href="./common/css/style.css">
-        </head>
+    <head>
+        <meta charset="UTF-8">
+        <title>絵のない技術書</title>
+        <link rel="stylesheet" href="./common/css/normalize.css">
+        <link rel="stylesheet" href="./common/css/style.css">
+    </head>
 
-        <body>
-            <div id="page">
+    <body>
+        <div id="page">
 
-                <?php include './common/header/globalNavi.html' ?>
+            <header id="pageHead">
+                <h1 id="siteTitle">絵のない技術書</h1>
+                <p id="catchcopy">かんたんな技術をむずかしくお勉強</p>
+                <nav class="globalNavi">
+                    <ul>
+                        <li><a href="index.html">ホーム</a></li>
+                        <li><a href="bookshelf/index.html">ほんだな</a></li>
+                        <li><a href="keyword/index.html">キーワード</a></li>
+                    </ul>
+                </nav>
+            </header>
 
-                <?php include './common/header/sideBar.html' ?>
+            <p class="topicPath"><a href="index.html">ホーム</a> &gt; ホーム</p>
 
-                <div id="pageBody">
+            <div id="pageBody">
+                <div id="pageBodyMain">
+                    <article>
+                        <header class="articleDetaiHead">
+                            <h1 class="pageTitle">ホーム</h1>
+                            <figure>
+                                <img src="common/img/logo.png" alt="" width="213" height="133">
+                            </figure>
+                        </header>
 
-                    <!--<div id="mainContents">
-                        <p>main contents</p>
-                        <p>main contents</p>
-                        <p>main contents</p>
-                        <p>main contents</p>
-                        </div>--><!-- mainContents -->
+                        <section class="articleDetailBody">
+                            <h2 class="heading-typeA">いますぐ、始められるカフェサイトテーマ</h2>
+                            <p>contents</p>
+                            <section>
+                                <h3 class="heading-typeB">レスポンシブデザイン</h3>
+                                <p>contents</p>
+                            </section>
+                            <section>
+                                <h3 class="heading-typeB">レスポンシブデザイン</h3>
+                                <p>contents</p>
+                            </section>
+                        </section>
 
-                </div><!-- pageBody -->
+                        <footer class="articleDetailFoot">
+                            <section>
+                                <h2 class="heading-typeC">関連リンク</h2>
+                                <ul>
+                                    <li><a href="link">link</a></li>
+                                </ul>
+                            </section>
+                        </footer>
+                    </article>
 
-            </div><!-- page -->
-        </body>
-    </article>
+                </div><!-- pageBodyMain -->
+
+                <div id="pageBodySub">
+                    <nav class="localNavi">
+                        <ul>
+                            <li><a href="link">link</a></li>
+                        </ul>
+                    </nav>
+                </div><!-- pageBodySub -->
+            </div><!-- pageBody -->
+
+            <p class="pagetop"><a href="#page">ページの先頭へ戻る</a></p>
+
+            <footer id="pageFoot">
+                <p id="copyright"><small>Copyright&copy; 2015 @Tokunn All Rights Reserve.</small></p>
+            </footer>
+
+
+        </div><!-- page -->
+    </body>
 </html>
