@@ -114,6 +114,11 @@ a:hover { color: #996600; }
 	float: right;
 }
 
+#pageBodySide {
+    width: 220px;
+    float: right;
+}
+
 
 /* ----- サブカラム内の装飾 ----- */
 

@@ -33,6 +33,9 @@ EOF;
 
 # Foot
 $foot = <<< EOF
+                <div id="pageBodySide">
+                    <p>sidebar</p>
+                </div><!-- pageBodySide -->
             </div><!-- pageBody -->
 
             <p class="pagetop"><a href="#page">ページの先頭へ戻る</a></p>
