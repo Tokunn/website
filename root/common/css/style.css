@@ -33,12 +33,13 @@ a:hover { color: #996600; }
 	font-size: 30px;
 	line-height: 1.2;
 	margin-bottom: 0;
-	font-family: 'Antic Didone', serif;
+    margin-left: 10px;
 }
 #pageHead #catchcopy {
 	font-size: 12px;
 	line-height: 1.5;
 	margin-top: 5px;
+    margin-left: 10px;
 }
 
 /* グローバルナビ */
@@ -59,7 +60,8 @@ a:hover { color: #996600; }
 }
 #pageHead .globalNavi ul li {
 	list-style: none;
-	width: 245px;
+	/*width: 245px;*/
+    width: 326px;
 	float: left;
 	border-left: solid 1px #CCCCCC;
 	padding: 0 10px;
@@ -147,6 +149,10 @@ a:hover { color: #996600; }
 }
 
 /* ローカルナビ */
+#pageBodySub .localNavi {
+    border: 1px solid #CCCCCC;
+}
+
 #pageBodySub .localNavi ul {
 	margin: 0 0 30px;
 	padding-left: 0;
@@ -162,6 +168,28 @@ a:hover { color: #996600; }
 	padding-left: 10px;
 }
 
+#pageBodySub .localNavi dl {
+	margin: 0 0 20px;
+	padding-left: 0;
+}
+#pageBodySub .localNavi dl dt {
+    margin: 8px;
+}
+#pageBodySub .localNavi dl dd {
+	font-size: 14px;
+	line-height: 1.429;
+	margin-bottom: 8px;
+	list-style-type: none;
+}
+
+#pageBodySub .localNavi ol {
+	margin: 0 0 30px;
+}
+#pageBodySub .localNavi ol li {
+	font-size: 13.5px;
+	line-height: 1.429;
+	margin-bottom: 2px;
+}
 /* ----- メインカラム内の装飾 ----- */
 
 #pageBodyMain p {
