@@ -5,10 +5,19 @@ $head = <<< EOF
 <!DOCTYPE html>
 <html lang="ja">
     <head>
-        <meta charset="UTF-8">
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>絵のない技術書</title>
         <link rel="stylesheet" href="/common/css/normalize.css">
         <link rel="stylesheet" href="/common/css/style.css">
+        <link rel="stylesheet" href="/common/syntaxhighlighter/styles/shCoreDefault.css">
+
+        <script type="text/javascript" src="/common/syntaxhighlighter/scripts/shCore.js"></script>
+        <script type="text/javascript">SyntaxHighlighter.all()</script>
+        <script type="text/javascript" src="/common/syntaxhighlighter/scripts/shBrushPlain.js"></script>
+        <script type="text/javascript" src="/common/syntaxhighlighter/scripts/shBrushPython.js"></script>
+        <script type="text/javascript" src="/common/syntaxhighlighter/scripts/shBrushCpp.js"></script>
+        <script type="text/javascript" src="/common/syntaxhighlighter/scripts/shBrushBash.js"></script>
+
     </head>
 
     <body>
