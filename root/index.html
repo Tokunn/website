@@ -6,35 +6,62 @@
         <header class="articleDetailHead">
             <h1 class="pageTitle">ホーム</h1>
             <figure>
-                <img src="/common/img/logo.png" alt="" width="213" height="133">
+                <img src="/common/img/img.png" alt="" width="213" height="133">
             </figure>
         </header>
 
-        <section class="articleDetailBody">
-            <h2 class="heading-typeA">いますぐ</h2>
-            <p>contents</p>
-            <section>
-                <h3 class="heading-typeB">レスポンシブ</h3>
-                <p>contents</p>
-            </section>
-        </section>
+        <section class="articleDetailBody" id="about">
+            <h2 class="heading-typeA">このサイトついて</h2>
+            <section id="outline">
+                <h3 class="heading-typeB">概要</h3>
+                <p>
+                    このサイトはふらふらと当てもなくコンピュータ・ロボットのお勉強をしている筆者の備忘録です。
+                    インターネットからかき集めた情報・実行して得られたコツなどを将来振り返るために記録しています。
+                    これらの情報がこれから学習する方々の何らかの参考になればとてもうれしく思います。
+                </p>
+            </section><!-- outline -->
+            <section id="direction">
+                <h3 class="heading-typeB">このサイトの方向性</h3>
+                <p>
+                    このサイトでは、Linux・組み込み系・ロボット・画像処理などをテーマに扱っていきます。
+                    徐々にコンテンツを増やしていきますので、必要なものなどご活用ください。
+                </p>
+            </section><!-- direction -->
+            <section id="writer">
+                <h3 class="heading-typeB">筆者について</h3>
+                <p>
+                    電気電子情報系の学生ですが、基本的には情報系しかできません。
+                    パソコンの上だけで動くプログラムから、実際に動かすロボットのプログラムまで、興味のあるものは何でもつくります。
+                    普段はArchLinux と Python を使っていろいろやってます。
+                    熱しやすく冷めやすいので、いろいろ長続きするとは限りません。
+                </p>
+            </section><!-- writer -->
+        </section><!-- about -->
 
         <footer class="articleDetailFoot">
             <section>
-                <h2 class="heading-typeC">関連リンク</h2>
+                <h2 class="heading-typeC">参考サイト</h2>
                 <ul>
-                    <li><a href="参考サイト名">参考サイト名</a></li>
+                    <li><a href="http://datasci.jp">@DataSci</a></li>
                 </ul>
             </section>
         </footer>
     </article>
-</div><!-- pagebodyMain -->
+</div><!-- pageBodyMain -->
 
 <div id="pageBodySub">
     <nav class="localNavi">
-        <ul>
-            <li><a href="link">目次</a></li>
-        </ul>
+        <dl>
+            <dt>目次</dt>
+            <dd>
+                <a href="#about">このサイトについて</a>
+                <ol>
+                    <li><a href="#outline">概要</a></li>
+                    <li><a href="#direction">このサイトの方向性</a></li>
+                    <li><a href="writer">筆者について</a></li>
+                </ol>
+            </dd>
+        </dl>
     </nav>
 </div><!-- pageBodySub -->
 

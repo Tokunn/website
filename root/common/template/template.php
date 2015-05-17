@@ -20,7 +20,7 @@ $head = <<< EOF
                 <nav class="globalNavi">
                     <ul>
                         <li><a href="/index.html">ホーム</a></li>
-                        <li><a href="/bookshelf/index.html">ほんだな</a></li>
+                        <li><a href="/bookshelf/index.html">ほんだな （記事を読む）</a></li>
                         <li><a href="/keyword/index.html">キーワード</a></li>
                     </ul>
                 </nav>
@@ -34,7 +34,7 @@ EOF;
 # Foot
 $foot = <<< EOF
                 <div id="pageBodySide">
-                    <p>sidebar</p>
+                    <p></p>
                 </div><!-- pageBodySide -->
             </div><!-- pageBody -->
 
