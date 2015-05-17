@@ -1,5 +1,27 @@
 <?php
 
+# Path name
+$path_name = [
+    'root'      => 'ホーム',
+    'bookshelf' => 'ほんだな',
+    'keyword'   => 'キーワード',
+    'blender'   => 'Blender',
+    'linux'     => 'Linux',
+    'opencv'    => 'OpenCV',
+    'program'   => 'プログラム',
+    'robot'     => 'ロボット',
+];
+$path_list = [
+    'root'      => '/index.html',
+    'bookshelf' => '/bookshelf/index.html',
+    'keyword'   => '/keyword/index.html',
+    'blender'   => '/bookshelf/blender/index.html',
+    'linux'     => '/bookshelf/linux/index.html',
+    'opencv'    => '/bookshelf/opencv/index.html',
+    'program'   => '/bookshelf/program/index.html',
+    'robot'     => '/bookshelf/robot/index.html',
+];
+
 # Head
 $head = <<< EOF
 <!DOCTYPE html>
@@ -35,7 +57,7 @@ $head = <<< EOF
                 </nav>
             </header>
 
-            <p class="topicPath"> &gt; <a href="/index.html">ホーム</a>
+            <p class="topicPath"> %s </p>
 
             <div id="pageBody">
 EOF;
@@ -59,15 +81,32 @@ $foot = <<< EOF
 EOF;
 
 # Head()
-function set_head() {
+function set_head_path($path) {
     global $head;
-    echo($head);
+    echo(sprintf($head, $path));
 }
 
 # Foot()
 function set_foot() {
     global $foot;
     echo($foot);
+}
+
+# Head and Path
+function set_head($dir) {
+    global $path_name;
+    global $path_list;
+    $path_template = " &gt; <a href=\"%s\">%s</a>";
+    $base_dir = NULL;
+    $path = NULL;
+    $dir = dirname($dir);
+
+    while ($base_dir != 'root') {
+        $base_dir = basename($dir);
+        $dir = dirname($dir);
+        $path = sprintf($path_template, $path_list[$base_dir], $path_name[$base_dir]).$path;
+    }
+    set_head_path($path);
 }
 
 ?>
