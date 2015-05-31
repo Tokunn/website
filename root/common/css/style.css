@@ -290,7 +290,7 @@ a:hover { color: #996600; }
 /* ページ説明 */
 #pageBodyMain .page-description {
     height: 75px;
-    margin: 0px 10px 10px 10px;
+    margin: 0 10px 10px 10px;
 }
 #pageBodyMain .page-description-ico {
     float: left;
@@ -298,11 +298,13 @@ a:hover { color: #996600; }
 #pageBodyMain .page-description-list {
     height: 75px;
     float: left;
-    margin: 0px 0px 0px 0px;
+    margin: 0 0 0 10px;
 }
 #pageBodyMain .page-description-list ul {
-    margin: 0 0 0 0;
+    padding: 0 0 0 20px;
+    margin: 0 0 0 0px;
 }
+
 /* 撮影情報 */
 #pageBodyMain .creditUnit {
 	padding: 10px;
