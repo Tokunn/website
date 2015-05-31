@@ -12,14 +12,14 @@ $path_name = [
     'robot'     => 'ロボット',
 ];
 $path_list = [
-    'root'      => '/index.html',
-    'bookshelf' => '/bookshelf/index.html',
-    'keyword'   => '/keyword/index.html',
-    'blender'   => '/bookshelf/blender/index.html',
-    'linux'     => '/bookshelf/linux/index.html',
-    'opencv'    => '/bookshelf/opencv/index.html',
-    'program'   => '/bookshelf/program/index.html',
-    'robot'     => '/bookshelf/robot/index.html',
+    'root'      => '/',
+    'bookshelf' => '/bookshelf/',
+    'keyword'   => '/keyword/',
+    'blender'   => '/bookshelf/blender/',
+    'linux'     => '/bookshelf/linux/',
+    'opencv'    => '/bookshelf/opencv/',
+    'program'   => '/bookshelf/program/',
+    'robot'     => '/bookshelf/robot/',
 ];
 
 # Head
@@ -50,9 +50,9 @@ $head = <<< EOF
                 <p id="catchcopy">かんたんな技術をむずかしくお勉強</p>
                 <nav class="globalNavi">
                     <ul>
-                        <li><a href="/index.html">ホーム</a></li>
-                        <li><a href="/bookshelf/index.html">ほんだな （記事を読む）</a></li>
-                        <li><a href="/keyword/index.html">キーワード</a></li>
+                        <li><a href="/">ホーム</a></li>
+                        <li><a href="/bookshelf/">ほんだな （記事を読む）</a></li>
+                        <li><a href="/keyword/">キーワード</a></li>
                     </ul>
                 </nav>
             </header>
