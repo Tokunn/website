@@ -46,8 +46,8 @@ $head = <<< EOF
         <div id="page">
 
             <header id="pageHead">
-                <h1 id="siteTitle">絵のない技術書</h1>
-                <p id="catchcopy">かんたんな技術をむずかしくお勉強</p>
+                <h1 id="siteTitle"><a href="/">絵のない技術書</a></h1>
+                <p id="catchcopy"><a href="/">かんたんな技術をむずかしくお勉強</a></p>
                 <nav class="globalNavi">
                     <ul>
                         <li><a href="/">ホーム</a></li>

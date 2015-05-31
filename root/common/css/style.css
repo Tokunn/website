@@ -33,13 +33,17 @@ a:hover { color: #996600; }
 	margin-bottom: 0;
     margin-left: 10px;
 }
-
 #pageHead #catchcopy {
 	font-size: 12px;
 	line-height: 1.5;
 	margin-top: 5px;
     margin-left: 10px;
 }
+#pageHead a {
+    color: #333333;
+    text-decoration: none;
+}
+#pageHead a:hover { color: #333333; }
 
 /* グローバルナビ */
 #pageHead .globalNavi {
