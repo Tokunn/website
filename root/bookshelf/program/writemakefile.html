@@ -1,0 +1,145 @@
+<?php include_once("/srv/http/website/root/common/template/template.php"); ?>
+<?php set_head(__FILE__); ?>
+
+<div id="pageBodyMain">
+    <article>
+        <header class="articleDetailHead">
+            <h1 class="pageTitle">Makefileの書き方</h1>
+        </header>
+
+        <section class="articleDetailBody" id="body">
+
+            <div id="objective">
+                <h2 class="heading-typeA">目的</h2>
+                <p>C++やCなどコンパイラ型言語を使ってプログラミングをするときは、何度も何度もコンパイルを繰り返します。
+                ここで、今RaspberryPi(ARM Linuxボード)を使ってプログラムを作成しているとします。
+                プログラムをホストマシンで組み、クロスコンパイルして実行ファイルをRaspberryPiへと転送します。
+                このとき、作業では次のコマンドを打ち込みます。
+                <pre class="brush: bash;">
+                    gcc-linaro-arm-linux-gnueabihf-g++ -Wall -Wextra -O2 -g -MMD -MP -L/usr/local/lib -I../include -I/usr/local/include -o cmd
+                    scp cmd user@192.168.7.2:/usr/bin/
+                </pre>
+                <p>これだけを見ると「たったの２行？」と感じるかもしれませんが、コンパイルして実行するたびにこのコマンドを何度も何度も打ち込むのはとても大変で非効率的です。
+                1回で160文字、10回繰り返すと1600文字、30回繰り返すと4800文字、これだけあれば、ソースコード100行分は優に超える文字数になります。
+                この無駄な時間を減らすためにあるのが、今回のテーマmakeです。</p>
+                <p>間違いを恐れずにmakeを大雑把にいうと、シェルスクリプトのコンパイル特化版です。</p>
+                <p>では、makeを使うとどのくらい短縮できるのでしょうか？
+                答えは次のコマンドが表していますね。
+                makeを使った時に、先ほどと同じ操作をするために打つコマンドです。</p>
+                <pre class="brush: bash;">
+                    make
+                </pre>
+                <p>「えっ？これだけ？」と思うかもしれません。
+                その通りです。
+                makeを使うとこれだけで、コンパイルから転送までが済んでしまいます。
+                あんな長ったらしいコマンドとはもうおさらばです。</p>
+                <p>しかし、ただし最初からmakeと打つだけでできるわけではありません。
+                makeを使うためには、コンパイルの設定を書き込んだMakefileが必要になります。
+                Makefileはその名の通りmakeのファイルで、コンパイラの情報からオプションまで、様々なものを書き込んでおくのですが、これがなかなか慣れない書き方をしなければなりません。
+                今回は、このMakefileを書いて作業の効率を上げる方法を解説していきます。</p>
+            </div><!-- objective -->
+
+            <div id="methods">
+                <h2 class="heading-typeA">方法</h2>
+                <p>では、ここからはMakefileの書き方です。</p>
+                <div id="provide">
+                    <h3 class="heading-typeB">準備</h3>
+                    <p>まずは、makeをインストールしてください。</p>
+                    <pre class="brush: bash;">
+                        # ArchLinux
+                        $ sudo pacman -S make
+
+                        # Ubuntu Debian系
+                        $ sudo apt-get install make
+
+                        # Fedora Redhat系
+                        $ sudo yum -y install make
+                    </pre>
+                    <p>今回はArchLinuxを使って解説しますが、LinuxならUbuntuでもFedoraでも基本的な操作は変わりません。</p>
+                    <p>次に、普段コンパイルに使用しているコマンドを用意してください。
+                    今回は先ほど上げた2行のコマンドとします。</p>
+                    <p>オプションなどについては別の回で解説します。</p>
+                </div><!-- provide -->
+
+                <div id="write">
+                    <h3 class="heading-typeB">書き方</h3>
+                    <p>まずは、先に完成したMakefileです。</p>
+                    <pre class="brush: bash;">
+                        CROSS   := ~/Program/cross_gcc/gcc-linaro-arm-linux-gnueabihf-raspbian-x64/bin/arm-linux-gnueabihf
+
+                        ifneq ($(CROSS),)
+                            CROSS_PREFIX	:= $(CROSS)-
+                        endif
+
+                        CXX		 = $(CROSS_PREFIX)g++
+                        CXXFLAGS = -Wall -Wextra -O2 -g -MMD -MP
+                        LDFLAGS	 =
+                        LIBS	 = -L/usr/local/lib
+                        INCLUDE	 = -I../include -I/usr/local/include
+                        BIN_DIR  = ../bin/
+                        TARGET 	 = $(BIN_DIR)$(shell basename `readlink -f ..`)
+                        OBJDIR	 = ./obj
+                        ifeq "$(strip $(OBJDIR))" ""
+                            OBJDIR = .
+                        endif
+                        SOURCES	:= $(wildcard *.cpp)
+                        OBJECTS	 = $(addprefix $(OBJDIR)/,$(SOURCES:.cpp=.o))
+                        DEPENDS	 = $(OBJECTS:.o=.d)
+
+                        all: $(BIN_DIR) $(TARGET)
+
+                        $(TARGET): $(OBJECTS)
+                            $(CXX) -o $@ $^ $(LDFLAGS)
+
+                        $(OBJDIR)/%.o:%.cpp
+                            @[ -d $(OBJDIR) ] || mkdir -p $(OBJDIR)
+                            $(CXX) $(CXXFLAGS) $(INCLUDE) -o $@ -c $<
+
+                        $(BIN_DIR):
+                            mkdir -p $(BIN_DIR)
+
+                        clean:
+                            $(RM) -r $(OBJECTS) $(DEPENDS) $(TARGET) $(BIN_DIR) `readlink -f $(OBJDIR)`
+
+                        upload: $(BIN_DIR) $(TARGET)
+                            #ssh-keygen -R 172.16.12.131
+                            scp $(TARGET) root@192.168.7.2:/usr/bin/
+                            #scp $(TARGET) root@192.168.10.2:/usr/bin/
+
+
+                        -include $(DEPENDS)
+                    </pre>
+                </div><!-- write -->
+
+            </div><!-- methods -->
+
+        </section><!-- body -->
+
+        <footer class="articleDetailFoot">
+            <section id="body">
+                <h2 class="heading-typeC">参考サイト</h2>
+                <ul>
+                    <li><a href="http://www.example.com/">example.com</a></li>
+                </ul>
+            </section><!-- body -->
+        </footer>
+    </article>
+</div><!-- pageBodyMain -->
+
+<div id="pageBodySub">
+    <nav class="localNavi">
+        <dl>
+            <dt>目次</dt>
+            <dd><a href="#objective">目的</a></dd>
+            <dd>
+                <a href="#methods">方法</a>
+                <ol>
+                    <li><a href="#provide">準備</a></li>
+                    <li><a href="#write">書き方</a></li>
+                </ol>
+            </dd>
+        </dl>
+    </nav>
+</div><!-- pageBodySub -->
+
+<?php set_foot(); ?>

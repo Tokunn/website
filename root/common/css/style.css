@@ -301,6 +301,7 @@ a:hover { color: #996600; }
 }
 #pageBodyMain .page-description-list {
     height: 75px;
+    width: 180px;
     float: left;
     margin: 0 0 0 10px;
 }
