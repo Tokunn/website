@@ -190,6 +190,14 @@ a:hover { color: #996600; }
 	line-height: 1.429;
 	margin-bottom: 2px;
 }
+#pageBodySub .localNavi ul {
+	margin: 0 0 30px;
+}
+#pageBodySub .localNavi ul li {
+	font-size: 13.5px;
+	line-height: 1.429;
+	margin-bottom: 2px;
+}
 /* ----- メインカラム内の装飾 ----- */
 
 #pageBodyMain p {
