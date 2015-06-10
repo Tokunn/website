@@ -64,72 +64,114 @@
 
                 <div id="write">
                     <h3 class="heading-typeB">書き方</h3>
-                    <p>まずは、先に完成したMakefileです。
-                    ファイルは<a href="/bookshelf/program/Makefile">こちら</a>。</p>
-                    <pre class="brush: bash;">
-                        CROSS   := ~/Program/cross_gcc/gcc-linaro-arm-linux-gnueabihf-raspbian-x64/bin/arm-linux-gnueabihf
+                    <div id="makefile">
+                        <p>まずは、先に完成したMakefileです。
+                        ファイルは<a href="/bookshelf/program/Makefile">こちら</a>。</p>
+                        <pre class="brush: bash;">
+                            CROSS   := ~/Program/cross_gcc/gcc-linaro-arm-linux-gnueabihf-raspbian-x64/bin/arm-linux-gnueabihf
 
-                        ifneq ($(CROSS),)
-                            CROSS_PREFIX	:= $(CROSS)-
-                        endif
+                            ifneq ($(CROSS),)
+                                CROSS_PREFIX	:= $(CROSS)-
+                            endif
 
-                        CXX		 = $(CROSS_PREFIX)g++
-                        CXXFLAGS = -Wall -Wextra -O2 -g -MMD -MP
-                        LDFLAGS	 =
-                        LIBS	 = -L/usr/local/lib
-                        INCLUDE	 = -I../include -I/usr/local/include
-                        BIN_DIR  = ../bin/
-                        TARGET 	 = $(BIN_DIR)$(shell basename `readlink -f ..`)
-                        OBJDIR	 = ./obj
-                        ifeq "$(strip $(OBJDIR))" ""
-                            OBJDIR = .
-                        endif
-                        SOURCES	:= $(wildcard *.cpp)
-                        OBJECTS	 = $(addprefix $(OBJDIR)/,$(SOURCES:.cpp=.o))
-                        DEPENDS	 = $(OBJECTS:.o=.d)
+                            CXX		 = $(CROSS_PREFIX)g++
+                            CXXFLAGS = -Wall -Wextra -O2 -g -MMD -MP
+                            LDFLAGS	 =
+                            LIBS	 = -L/usr/local/lib
+                            INCLUDE	 = -I../include -I/usr/local/include
+                            BIN_DIR  = ../bin/
+                            TARGET 	 = $(BIN_DIR)$(shell basename `readlink -f ..`)
+                            OBJDIR	 = ./obj
+                            ifeq "$(strip $(OBJDIR))" ""
+                                OBJDIR = .
+                            endif
+                            SOURCES	:= $(wildcard *.cpp)
+                            OBJECTS	 = $(addprefix $(OBJDIR)/,$(SOURCES:.cpp=.o))
+                            DEPENDS	 = $(OBJECTS:.o=.d)
 
-                        all: $(BIN_DIR) $(TARGET)
+                            all: $(BIN_DIR) $(TARGET)
 
-                        $(TARGET): $(OBJECTS)
-                            $(CXX) -o $@ $^ $(LDFLAGS)
+                            $(TARGET): $(OBJECTS)
+                                $(CXX) -o $@ $^ $(LDFLAGS)
 
-                        $(OBJDIR)/%.o:%.cpp
-                            @[ -d $(OBJDIR) ] || mkdir -p $(OBJDIR)
-                            $(CXX) $(CXXFLAGS) $(INCLUDE) -o $@ -c $<
+                            $(OBJDIR)/%.o:%.cpp
+                                @[ -d $(OBJDIR) ] || mkdir -p $(OBJDIR)
+                                $(CXX) $(CXXFLAGS) $(INCLUDE) -o $@ -c $<
 
-                        $(BIN_DIR):
-                            mkdir -p $(BIN_DIR)
+                            $(BIN_DIR):
+                                mkdir -p $(BIN_DIR)
 
-                        clean:
-                            $(RM) -r $(OBJECTS) $(DEPENDS) $(TARGET) $(BIN_DIR) `readlink -f $(OBJDIR)`
+                            clean:
+                                $(RM) -r $(OBJECTS) $(DEPENDS) $(TARGET) $(BIN_DIR) `readlink -f $(OBJDIR)`
 
-                        upload: $(BIN_DIR) $(TARGET)
-                            scp $(TARGET) root@192.168.7.2:/usr/bin/
+                            upload: $(BIN_DIR) $(TARGET)
+                                scp $(TARGET) root@192.168.7.2:/usr/bin/
 
 
-                        -include $(DEPENDS)
-                    </pre>
-                    <p>20行目までが、変数などの定義。22行目からがコンパイルなどの操作をしています。</p>
-                    <table>
-                        <caption>変数</caption>
-                        <tr>
-                            <th>CROSS</th>
-                            <td>クロスコンパイラへのパス（最後の"-gcc" "-g++"は除いて代入）</td>
-                        </tr>
-                        <tr>
-                            <th>CXX</th>
-                            <td>コンパイラの名前（"$(CROSS)-g++"が代入される。CROSSが空の場合は"g++"のみ）</td>
-                            <th>CXXFLAGS</th>
-                            <td>コンパイルオプション（複数の場合はスペース区切りで列挙）</td>
-                            <th>LDFLAGS</th>
-                            <td></td>
-                            <th>LIBS</th>
-                            <td>ライブラリへのパス</td>
-                            <th>INCLUDE</th>
-                            <td>インクルードするファイルへのパス</td>
-                            <th>BIN_DIR</th>
-                            <td>作成する実行ファイルを保存するフォルダ名</td>
-                    </table>
+                            -include $(DEPENDS)
+                        </pre>
+                        <p>20行目までが、変数などの定義、22行目からがコンパイルなどの操作をしています。</p>
+                    </div><!-- makefile -->
+                    <div id="variable">
+                        <table>
+                            <caption>変数</caption>
+                            <tr>
+                                <th>変数名</th>
+                                <th>役割</th>
+                            </tr>
+                            <tr>
+                                <td>CROSS</td>
+                                <td>クロスコンパイラへのパス（最後の"-gcc" "-g++"は除いて代入）</td>
+                            </tr>
+                            <tr>
+                                <td>CXX</td>
+                                <td>コンパイラの名前（"$(CROSS)-g++"が代入される。CROSSが空の場合は"g++"のみ）</td>
+                            </tr>
+                            <tr>
+                                <td>CXXFLAGS</td>
+                                <td>コンパイルオプション（複数の場合はスペース区切りで列挙）</td>
+                            </tr>
+                            <tr>
+                                <td>LDFLAGS</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>LIBS</td>
+                                <td>ライブラリへのパス</td>
+                            </tr>
+                            <tr>
+                                <td>INCLUDE</td>
+                                <td>インクルードするファイルへのパス</td>
+                            </tr>
+                            <tr>
+                                <td>BIN_DIR</td>
+                                <td>作成する実行ファイルを保存するフォルダ名</td>
+                            </tr>
+                            <tr>
+                                <td>TARGET</td>
+                                <td>作成する実行ファイルの名前（今回は上の階層のディレクトリ名を取得）</td>
+                            </tr>
+                            <tr>
+                                <td>OBJDIR</td>
+                                <td>コンパイル・リンク中に生成されるファイルの一時保存場所</td>
+                            </tr>
+                            <tr>
+                                <td>SOURCES</td>
+                                <td>コンパイルするソースファイル名（今回は .cppのファイル）</td>
+                            </tr>
+                            <tr>
+                                <td>OBJECTS</td>
+                                <td>コンパイル・リンクで生成されるファイル名</td>
+                            </tr>
+                            <tr>
+                                <td>DEPENDS</td>
+                                <td></td>
+                            </tr>
+                        </table>
+                    </div><!-- variable -->
+                    <div id="operation">
+                    </div><!-- operation -->
+
                 </div><!-- write -->
 
             </div><!-- methods -->
@@ -157,6 +199,11 @@
                 <ol>
                     <li><a href="#provide">準備</a></li>
                     <li><a href="#write">書き方</a></li>
+                    <ul>
+                        <li><a href="#makefile">ファイル</a></li>
+                        <li><a href="#variable">変数</a></li>
+                        <li><a href="#operation">操作</a></li>
+                    </ul>
                 </ol>
             </dd>
         </dl>
