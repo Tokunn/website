@@ -1,0 +1,171 @@
+<?php include_once("../../common/template/template.php"); ?>
+<?php set_head(__FILE__); ?>
+
+<div id="pageBodyMain">
+    <article>
+        <header class="articleDetailHead">
+            <h1 class="pageTitle">Makefileの書き方</h1>
+        </header>
+
+        <section class="articleDetailBody" id="body">
+
+            <div id="objective">
+                <h2 class="heading-typeA">目的</h2>
+                <p>今回はRaspberryPiについてです。
+                RaspberryPiは小さなマイコンボードですが、Debianの派生OSをGUIで動かせてしまうほどの力を持っています。
+                今回は、そのRaspberryPiの起動から初期設定までをしたいと思います。</p>
+            </div><!-- objective -->
+
+            <div id="methods">
+                <h2 class="heading-typeA">方法</h2>
+                <p>では、ここからはRaspberryPiのセットアップです。</p>
+                <div id="provide">
+                    <h3 class="heading-typeB">準備</h3>
+                    <p>まずは下記のものを用意してください</p>
+                    <ol>
+                        <li>RaspberryPi (type B)</li>
+                        <li>HDMIケーブル</li>
+                        <li>USBキーボード</li>
+                        <li>SDカード</li>
+                        <li>LANクロスケーブル</li>
+                        <li>Windowsマシン(仮想マシンでも可)</li>
+                        <li>MicroUSB-B to USB-A ケーブル</li>
+                    </ol>
+                    <p>(1)のRaspberryPiにはtype Aとtype Bの2種類があります。
+                    有線LANが使えるため、type Bをお勧めします。</p>
+                    <p>(2)(3)RaspberryPiはHDMI出力ができます。
+                    ケーブルとディスプレイを用意してください。
+                    HDMIに対応していない場合でも、変換アダプターを使うと接続できます。</p>
+                    <p>(4)RaspberryPiに接続するためにUSBキーボードを用意します。</p>
+                    <p>(5)RaspberryPiは内部ストレージがないので、すべての情報をSDカードに書き込みます。
+                    相性があるようなので注意してください。
+                    相性については以下のサイトの中ほどにある表で確認してください。
+                    8GB程度あるのが望ましいでしょう。<br />
+                    <a href="http://elinux.org/RPi_SD_cards">RPI SD cards</a></p>
+                    <p>(6)type Bには有線LANのポートがあります。
+                    ロボットに積んだRaspberryPiにディスプレイとキーボードを接続して操作するのには無理があるので、ノートパソコンと有線LANで接続してsshで操作します。
+                    このときにルーターを介さないために普通のLANケーブルではなくて、クロスケーブルが必要になります。</p>
+                </div><!-- provide -->
+
+                <div id="write">
+                    <h3 class="heading-typeB">SDカードにRaspbianをインストール</h3>
+                    <p>ここからはWindowsでの操作になります。</p>
+                        <p>RaspberryPiには様々なOSがあります。
+                        raspbian, pidora, openelec, raspbmc, rics os, rach linuxなどです。
+                        今回はその中からRaspbianをインストールします。
+                        以下のサイトからRASPBIANをダウンロードしてきてください。
+                        <br /><a href="https://www.raspberrypi.org/downloads/">Raspberrypi Download</a></p>
+                        <p>ダウンロードしてきたファイルを解凍してください。</p>
+                        <p>できた20**-**-**-wheezy-raspbian.imgをSDカードにインストールします。
+                            Linuxのddコマンドでもできるらしいのですが、うまく起動しなかったので今回はWindowsを使って行います。
+                            Windowsマシンで以下のサイトからwin32disk imagerをダウンロードしてきてください。
+                            <a href="http://osdn.jp/projects/sfnet_win32diskimager/">Download imager</a></p>
+                        <p>用意しておいたイメージファイルをimagerを使ってSDカードにインストールしてください。</p>
+                </div><!-- write -->
+                <div id="start">
+                    <h3 class="heading-typeB">Raspbianの起動</h3>
+                    <p>
+                    <ol>
+                        <li>SDカードをRaspberryPiにさしてください。</li>
+                        <li>ディスプレイとキーボードを接続してください。</li>
+                        <li>マイクロUSBケーブルでパソコンとRaspberryPiを繋いでください。
+                            電源が供給されると自動的に起動します。</li>
+                        <li>しばらく待つと(1分程度)Raspbianが起動します。</li>
+                    </ol>
+                    </p>
+                </div><!-- write -->
+                <div id="setup">
+                    <h3 class="heading-typeB">Raspbianの設定</h3>
+                    <p>このままでは起動するたびにディスプレイとキーボードを使ってログインしなくてはいけません。
+                    Arduinoのように起動するとある動作をしてほしいので、自動ログインと自動実行の設定をします。</p>
+                    <p>Raspbianが起動すると設定画面が開きます。
+                    適宜設定をしてください。
+                    終わったらFinishで抜けます。
+                    この設定を今後したい場合はraspi-configで開くことができます。</p>
+                    <pre class="brush: bash;">
+                        raspi-config
+                    </pre>
+                    <div id="autologin">
+                        <p>Raspbianの自動ログイン<br />
+                        設定ファイルを開きます。</p>
+                        <pre class="brush: bash;">
+                            sudo vim /etc/inittab
+                        </pre>
+                        <p>開いたファイルを編集します。</p>
+                        <pre class="brush: bash;">
+                            1:2345:respawn:/sbin/getty 38400 tty1
+                        </pre>
+                        <p>の行の頭に#をつけてコメントアウトします。そのすぐ下に</p>
+                        <pre class="brush: bash;">
+                            1:2345:respawn:/bin/login -f pi tty1 /dev/tty1 2>&1
+                        </pre>
+                        <p>を書き加えます。
+                        書き換えたら再起動してください。
+                        次の起動時から自動ログインになります。</p>
+                    </div><!-- autologin -->
+                    <div id="autostart">
+                        <p>Raspbianの自動実行<br />
+                        /etc/init.dにあるシェルスクリプトが起動時に自動実行されることを利用して、ホームフォルダの下にあるファイルを実行させます。</p>
+                        <pre class="brush: bash;">
+                            sudo vim /etc/init.d/autorun_script
+                        </pre>
+                        <p>下記の内容を書き込んでください。</p>
+                        <pre class="brush: bash;">
+                            #!/bin/sh
+
+                            sudo /home/pi/Python/autorun.py
+                            while true
+                            do
+                                :
+                            done
+                        </pre>
+                        <p>実行権限を与えて自動実行するようにします。</p>
+                        <pre class="brush: bash;">
+                            sudo chmod 755 /etc/init.d/autorun_script
+                            update-rc.d /etc/init.d/autorun_script defaults
+                            mkdir ~/Python
+                        </pre>
+                        <p>これでホームフォルダのPythonフォルダの中にあるautorun.pyが自動実行されるようになりました。</p>
+                    </div><!-- autostart -->
+                </div><!-- setup -->
+            </div><!-- methods -->
+
+            <div id="conclusion">
+                <h2 class="heading-typeA">おわりに</h2>
+                <p>RaspberryPiの設定をやりましたが、いかがでしたでしょうか？<br />
+                わからないことなどがありましたら、ご質問だくさい。</p>
+            </div><!-- conclusion -->
+
+        </section><!-- body -->
+
+        <footer class="articleDetailFoot">
+            <section id="body">
+                <h2 class="heading-typeC">参考サイト</h2>
+                <ul>
+                    <li><a href="http://tokunn.hateblo.jp/entry/2014/05/31/105531">RaspberryPiの起動・設定</a></li>
+                </ul>
+            </section><!-- body -->
+        </footer>
+    </article>
+</div><!-- pageBodyMain -->
+
+<div id="pageBodySub">
+    <nav class="localNavi">
+        <dl>
+            <dt>目次</dt>
+            <dd><a href="#objective">目的</a></dd>
+            <dd>
+                <a href="#methods">方法</a>
+                <ol>
+                    <li><a href="#provide">準備</a></li>
+                    <li><a href="#write">Raspbianのインストール</a></li>
+                    <li><a href="#start">Raspbianの起動</a></li>
+                    <li><a href="#setup">Raspbianの設定</a></li>
+                </ol>
+            </dd>
+            <dd><a href="#conclusion">終わりに</a></li>
+        </dl>
+    </nav>
+</div><!-- pageBodySub -->
+
+<?php set_foot(); ?>
