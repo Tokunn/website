@@ -14,7 +14,7 @@ a:hover { color: #996600; }
 	margin-top: 30px;
 }
 .pagetop a {
-	background-image: url("common/img/ico_pagetop.png");
+	/*background-image: url("common/img/ico_pagetop.png");*/
 	background-repeat: no-repeat;
 	background-position: 0 50%;
 	padding-left: 10px;

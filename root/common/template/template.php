@@ -108,4 +108,5 @@ function set_head($dir) {
     set_head_path($path);
 }
 
+#include_once("analyticstracking.php");
 ?>
