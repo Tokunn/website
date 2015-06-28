@@ -6,7 +6,7 @@ $path_name = [
     'keyword'   => 'キーワード',
     'blender'   => 'Blender',
     'linux'     => 'Linux',
-    'opencv'    => 'OpenCV',
+    'imageprocessing'    => '画像処理',
     'program'   => 'プログラム',
     'robot'     => 'ロボット',
 ];
@@ -16,7 +16,7 @@ $path_list = [
     'keyword'   => '/keyword/',
     'blender'   => '/bookshelf/blender/',
     'linux'     => '/bookshelf/linux/',
-    'opencv'    => '/bookshelf/opencv/',
+    'imageprocessing'    => '/bookshelf/imageprocessing/',
     'program'   => '/bookshelf/program/',
     'robot'     => '/bookshelf/robot/',
 ];
