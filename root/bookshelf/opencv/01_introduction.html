@@ -1,0 +1,76 @@
+<?php include_once("../../common/template/template.php"); ?>
+<?php set_head(__FILE__); ?>
+
+<div id="pageBodyMain">
+    <article>
+        <header class="articleDetailHead">
+            <h1 class="pageTitle">OpenCVイントロダクション</h1>
+        </header>
+
+        <section class="articleDetailBody" id="body">
+
+            <div id="objective">
+                <h2 class="heading-typeA">目的</h2>
+                <p>画像処理ライブラリOpenCVについて勉強しながらメモしていきます。</p>
+                <p>現在はOpenCV2が主流ですが、OpenCV1の解説書である「詳解 OpenCV (O'REILLY)」を使ってOpenCV2に読み替えながら進んでいきます。</p>
+            </div><!-- objective -->
+
+            <div id="methods">
+                <h2 class="heading-typeA">OpenCVについて</h2>
+                <div id="whatis">
+                    <h3 class="heading-typeB">OpenCVとは</h3>
+                    <p>OpenCVはオープンソースのコンピュータビジョンライブラリです。
+                    このライブラリはCとC++で書かれており、Linux,Windows,Mac OS X上で動かすことができます。
+                    Python,Ruby,Matlabからのアクセスも可能です。</p>
+                    <p>このライブラリを使って、画像や映像から空間を認識したり、人間や顔を認識したり、エフェクトをかけたりなど、私達のみているものをコンピュータに取り込むことができます。</p>
+                </div><!-- whatis -->
+                <div id="origin">
+                    <h3 class="heading-typeB">OpenCVの起源</h3>
+                    <p>OpenCVの開発は1999年にIntelで始まりました。
+                    当時、様々な大学が個別に持っていたコンピュータビジョンライブラリを広く一般に使えるようにするために開発が始まりました。
+                    現在は、開発の中心はIntelではなくROSの開発などをしているWillow Garageが積極的にサポートしています。</p>
+                </div><!-- origin -->
+                <div id="whose">
+                    <h3 class="heading-typeB">OpenCVの所有者</h3>
+                    <p>OpenCVは商用利用と研究利用の推進を意図して作られました。
+                    そのため、オープンかつ無償であり、コードそれ自体を、商用、研究用にかかわらず、他のアプリケーションに使用したり埋め込んだりして使うことができます。</p>
+                </div><!-- whose -->
+            </div><!-- methods -->
+
+            <div id="conclusion">
+                <h2 class="heading-typeA">おわりに</h2>
+                <p>いかがでしたでしょうか？<br />
+                わからないことなどがありましたら、ご質問だくさい。</p>
+            </div><!-- conclusion -->
+        </section><!-- body -->
+
+        <footer class="articleDetailFoot">
+            <section id="body">
+                <h2 class="heading-typeC">参考書籍</h2>
+                <ul>
+                    <li>オライリー詳解OpenCV</li>
+                </ul>
+            </section><!-- body -->
+        </footer>
+    </article>
+</div><!-- pageBodyMain -->
+
+<div id="pageBodySub">
+    <nav class="localNavi">
+        <dl>
+            <dt>目次</dt>
+            <dd><a href="#objective">目的</a></dd>
+            <dd>
+                <a href="#methods">OpenCVについて</a>
+                <ol>
+                    <li><a href="#whatis">OpenCVとは</a></li>
+                    <li><a href="#origin">OpenCVの起源</a></li>
+                    <li><a href="#whose">OpenCVの所有者</a></li>
+                </ol>
+            </dd>
+            <dd><a href="#conclusion">終わりに</a></li>
+        </dl>
+    </nav>
+</div><!-- pageBodySub -->
+
+<?php set_foot(); ?>
