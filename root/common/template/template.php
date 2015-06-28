@@ -1,5 +1,4 @@
 <?php
-
 # Path name
 $path_name = [
     'root'      => 'ホーム',
