@@ -1,0 +1,109 @@
+<?php include_once("../../common/template/template.php"); ?>
+<?php set_head(__FILE__); ?>
+
+<div id="pageBodyMain">
+    <article>
+        <header class="articleDetailHead">
+            <h1 class="pageTitle">Makefileの書き方</h1>
+        </header>
+
+        <section class="articleDetailBody" id="body">
+
+            <div id="objective">
+                <h2 class="heading-typeA">目的</h2>
+                <p>今回はLinuxの自動ログインについてです。
+                ユーザー名・パスワードを入力せずにログインをします。
+                Ubuntu(Upstart?) Archlinux(systemd)での方法を説明します。</p>
+            </div><!-- objective -->
+
+            <div id="methods">
+                <h2 class="heading-typeA">方法</h2>
+                <div id="provide">
+                    <h3 class="heading-typeB">準備</h3>
+                    <p>設定したいLinuxマシンを用意してください。</p>
+                </div><!-- provide -->
+
+                <div id="ubuntu">
+                    <h3 class="heading-typeB">Ubuntu(Raspbian)での方法</h3>
+                    <p>Ubuntu(Raspbian)での方法です。<br />
+                    まず、inittabファイルを開きます。</p>
+                    <pre class="brush: bash;">
+                        sudo vim /etc/inittab
+                    </pre>
+                    <p>開いたファイルの中から下の行を見つけ出して、行頭に#をつけてコメントアウトします。</p>
+                    <pre class="brush: bash;">
+                        1:2345:respawn:/sbin/getty 38400 tty1
+                    </pre>
+                    <p>そのすぐ下に下の行を追加します。
+                    "username"は適宜存在するユーザー名に置き換えてください。</p>
+                    <pre class="brush: bash;">
+                        1:2345:respawn:/bin/login -f username tty1 /dev/tty1 2>&1
+                    </pre>
+                    <p>保存して再起動すると自動ログインになります。</p>
+                </div><!-- ubuntu -->
+
+                <div id="arch">
+                    <h3 class="heading-typeB">ArchLinuxでの方法</h3>
+                    <p>ArchLinuxでの方法です。
+                    ArchLinuxはinitデーモンにsystemdを使っています。<br />
+                    まず、systemdの設定ファイルを用意します。</p>
+                    <pre class="brush: bash;">
+                        cp /usr/lib/systemd/system/getty@.service /usr/lib/systemd/system/autologin@.service
+                    </pre>
+                    <p>次に、ファイルを開いて次の行を見つけ出して、行頭に#をつけてコメントアウトします。</p>
+                    <pre class="brush: bash;">
+                        ExecStart=-/sbin/agetty --noclear %I $TERM
+                    </pre>
+                    <p>そのすぐ下に下の行を追加します。
+                    "username"は適宜存在するユーザー名に置き換えてください。</p>
+                    <pre class="brush: bash;">
+                        ExecStart=-/sbin/agetty --noclear -a username %I 38400 linux
+                    </pre>
+                    <p>変更したらファイルを保存して閉じてください。</p>
+                    <p>最後に、systemdに登録して有効化してください。</p>
+                    <pre class="brush: bash;">
+                        systemctl disable getty@tty1
+                        systemctl enable autologin@tty1
+                    </pre>
+                    <p>再起動すると自動ログインになります。</p>
+                </div><!-- arch -->
+            </div><!-- methods -->
+
+            <div id="conclusion">
+                <h2 class="heading-typeA">おわりに</h2>
+                <p>いかがでしたでしょうか？<br />
+                わからないことなどがありましたら、ご質問だくさい。</p>
+            </div><!-- conclusion -->
+
+        </section><!-- body -->
+
+        <footer class="articleDetailFoot">
+            <section id="body">
+                <h2 class="heading-typeC">参考サイト</h2>
+                <ul>
+                    <li><a href="https://gist.github.com/computalya/5163302">auto login for tty logins on ArchLinux</a></li>
+                </ul>
+            </section><!-- body -->
+        </footer>
+    </article>
+</div><!-- pageBodyMain -->
+
+<div id="pageBodySub">
+    <nav class="localNavi">
+        <dl>
+            <dt>目次</dt>
+            <dd><a href="#objective">目的</a></dd>
+            <dd>
+                <a href="#methods">方法</a>
+                <ol>
+                    <li><a href="#provide">準備</a></li>
+                    <li><a href="#ubuntu">Ubuntuでの方法</a></li>
+                    <li><a href="#arch">ArchLinuxでの方法</a></li>
+                </ol>
+            </dd>
+            <dd><a href="#conclusion">終わりに</a></li>
+        </dl>
+    </nav>
+</div><!-- pageBodySub -->
+
+<?php set_foot(); ?>
