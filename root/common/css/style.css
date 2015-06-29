@@ -166,7 +166,7 @@ a:hover { color: #996600; }
 	line-height: 1.429;
 	margin-bottom: 12px;
 	list-style-type: none;
-	background-image: url("common/img/ico_arrow.png");
+	/*background-image: url("common/img/ico_arrow.png");*/
 	background-repeat: no-repeat;
 	background-position: 0 8px;
 	padding-left: 10px;
