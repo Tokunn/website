@@ -1,4 +1,7 @@
-body { color: #333333; }
+body {
+    /*background-color:;*/
+    color: #333333;
+}
 
 /* リンク */
 a { color: #999966; }

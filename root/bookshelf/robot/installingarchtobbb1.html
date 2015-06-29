@@ -1,0 +1,219 @@
+<?php include_once($_SERVER['DOCUMENT_ROOT'].'/common/template/template.php') ?>
+<?php set_head('ArchLinuxをBeagleBoneBlackへインストール', __FILE__); ?>
+
+<div id="pageBodyMain">
+    <article>
+        <header class="articleDetailHead">
+            <h1 class="pageTitle">ArchLinuxをBeagleBoneBlackへインストール</h1>
+        </header>
+
+        <section class="articleDetailBody" id="body">
+
+            <div id="objective">
+                <h2 class="heading-typeA">目的</h2>
+                <p>今回はBeagleBoneBlackについてです。
+                BeagleBoneBlackもRaspberryPi同様小さなマイコンボードですが、Debianの派生OSをGUIで動かせてしまうほどの力を持っています。
+                今回は、そのBeagleBoneBlackへ軽量でパワフルなArchLinuxをインストールして、起動から初期設定までをしたいと思います。</p>
+            </div><!-- objective -->
+
+            <div id="methods">
+                <h2 class="heading-typeA">方法</h2>
+                <p>では、ここからはBeagleBoneBlackのセットアップです。</p>
+                <p>BeagleBoneBlackはディスプレイにマイクロHDMIケーブルを使うのですが、高いので今回は使用せずに、ディスプレイなしでBeagleBoneBlackのセットアップを行います。
+                方法は、同じネットワークへ接続してsshで繋ぐ方法と、USB-Serialコンバータを使用してシリアルコンソールでログインする方法があります。
+                今回は前者の、ネットワークごしにログインします。</p>
+                <div id="provide">
+                    <h3 class="heading-typeB">準備</h3>
+                    <p>まずは下記のものを用意してください</p>
+                    <ol>
+                        <li>BeagleBoneBlack (Rev C)</li>
+                        <li>マイクロSDカード</li>
+                        <li>LANケーブル</li>
+                        <li>MiniUSB-B to USB-A ケーブル</li>
+                        <li>マイクロSDカードへ書き込みができるLinuxマシン(マイクロSDアダプターの使用も可)</li>
+                    </ol>
+                    <p>(1) BeagleBoneBlack には種類が複数ありますが、現在最新のRev Cを使用します。</p>
+                    <p>(2) BeagleBoneBlackはRaspberryPi B+などと同様にマイクロSDカードを使用します。
+                    私は、TOSHIBAの8Gを用意しました。
+                    SDカードのデータはすべて消えますのでバックアップはしておいてください。<br />
+                    内部ストレージもありますが、インストールにはSDカードを使用しないとできません。
+                    内部ストレージの方が早いので、SDで起動した後に内部ストレージへインストールをお勧めします。</p>
+                    <p>(3) BeagleBoneBlackをネットワークに接続するためにLANケーブルを使用します。有線でないと設定できません。</p>
+                    <p>(4) BeagleBoneBlackはMiniBで電源供給を行います。
+                    RaspberryPiと異なり、設定をするとこのポートを使って(ネットワークケーブルを使用せずに)パソコンからログインできるようになります。</p>
+                </div><!-- provide -->
+
+                <div id="write">
+                    <h3 class="heading-typeB">SDカードの準備</h3>
+                    <p>ここからは作業用Linuxマシンでの操作になります。</p>
+                    <p>まずは、マイクロSDカードをパソコンへ接続してください。
+                    接続したら、lsblkコマンドでマイクロSDカードが認識されていることを確認してください。</p>
+                    <pre class="brush: bash;">
+                        $ lsblk
+                        NAME    MAJ:MIN RM  SIZE    RO  TYPE    MOUNTPOINT
+                        sda        8:0    0  119.2G   0  disk
+                        └─sda1    8:1    0  119.2G   0  part    /
+                        sdb        8:16   0  119.2G   0  disk
+                        └─sdb1    8:17   0  119.2G   0  part
+                        sdc        8:32   1    7.4G   0  disk
+                        ├─sdc1    8:33   1     64M   0  part
+                        └─sdc2    8:34   1    7.4G   0  part
+                        sr0       11:0    1   1024M   0  rom
+                    </pre>
+                    <p>私の環境では上記結果のようになりました。
+                    SDカードはsdcです。
+                    この時、sdcは既に２つにパーティションが区切られていたため、sdc1とsdc2というパーティションができています。(Typeがpart)しかし、このあと重要になるのはsdcというデバイス名(Typeがdisk)です。</p>
+                    <p>このとき、デバイス名を間違えると、パソコンのハードディスクに書き込んでしまいます。
+                    OSが起動しなくなってしまうかもしれません、念入りにチェックしてください。</p>
+                    <div id="partition">
+                        <h4 class="heading-typeD">パーティション分け</h4>
+                        <p>SDカードにルートパーティションを作成します。</p>
+                        <p>fdiskで切り分けていきます。<br />
+                        "devicename"の部分は先程lsblkで調べたデバイス名を使用してください。
+                        私の場合はsdcです。</p>
+                        <pre class="brush: bash;">
+                            $ sudo fdisk /dev/devicename
+                        </pre>
+                        <p>fdiskが起動したら、まずはデバイスのパーティションを全て削除します。
+                        oを入力してください。</p>
+                        <pre class="brush: bash;">
+                            Command (m for help): o
+                        </pre>
+                        <p>これでパーティションが初期されました。</p>
+                        <p>次に、ブートパーティションを作成します。
+                        nを入力してください。</p>
+                        <pre class="brush: bash;">
+                            Command (m for help): n
+                        </pre>
+                        <p>すると、作成するパーティションタイプを選択するよう言われます。
+                        primaryパーティションを使用するため、そのままEnterキーを押すか、pを入力してください。</p>
+                        <pre class="brush: bash;">
+                            Select (default p): p
+                        </pre>
+                        <p>次に、パーティションナンバーを選択するよう言われます。
+                        1を使用するため、そのままEnterキーを押すか、1を入力してください。</p>
+                        <pre class="brush: bash;">
+                            Partition number (1-4, default 1): 1
+                        </pre>
+                        <p>次に、開始セクターを入力するように言われます。
+                        最小の値を使用するため、そのままEnterを押すか、2048を入力してください。
+                        表示される数字はデバイスのサイズによって異なります。</p>
+                        <pre class="brush: bash;">
+                            First sector (2048-15564799, default 2048): 2048
+                        </pre>
+                        <p>次に、終了セクターを入力するよう言われます。
+                        最大の値を使用するため、そのままEnterを押してください。</p>
+                        <pre class="brush: bash;">
+                            Last sector, +sectors or +size(K, M, G, T, P} (2048-15564799, default 15564799):
+                        </pre>
+                        <p>パーティション分けは完了です。
+                        pを入力して、パーティション構成を確認したら、wを入力して変更を適用してください。</p>
+                        <pre class="brush: bash;">
+                            Command (m for help): p
+                            Command (m for help): w
+                        </pre>
+                    </div><!-- partition -->
+                    <div id="format">
+                        <h4 class="heading-typeD">パーティションのフォーマット</h4>
+                        <p>パーティションを作成したので、次にext4にフォーマットします。
+                        私の場合はdevicename1はsdc1になります。
+                        今度は、デバイス名でなくパーティション名を指定するため、最後に1がつくことに注意してください。</p>
+                        <pre class="brush: bash;">
+                            $ sudo mkfs.ext4 /dev/devicename1
+                        </pre>
+                        <p>もしdosfstoolsがインストールされていなかった時はインストールしてください。</p>
+                        <pre class="brush: bash;">
+                            # ArchLinuxの場合
+                            $ sudo pacman -Sy dosfstools
+                        </pre>
+                    </div><!-- format -->
+                </div><!-- write -->
+                <div id="install">
+                    <h3 class="heading-typeB">SDカードにArchLinuxをインストール</h3>
+                    <div id="mount">
+                        <h4 class="heading-typeD">マウント</h4>
+                        <p>作業のために適当なディレクトリにマウントします。
+                        今回は~/Document/SDとします。</p>
+                        <pre class="brush: bash;">
+                            $ mkdir -p ~/Document/SD
+                            $ cd ~/Document
+                        </pre>
+                        <p>マウントします。</p>
+                        <pre class="brush: bash;">
+                            $ sudo mount /dev/devicename1 ~/Document/SD
+                        </pre>
+                    </div><!-- mount -->
+                    <div id="download">
+                        <h4 class="heading-typeD">ダウンロード</h4>
+                        <p>ダウンロードしてきます。</p>
+                        <pre class="brush: bash;">
+                            $ wget http://archlinuxarm.org/os/ArchLinuxARM-am33x-latest.tar.gz
+                        </pre>
+                        <p>もしwgetがインストールされていなかった時はインストールしてください。</p>
+                        <pre class="brush: bash;">
+                            # ArchLinuxの場合
+                            $ sudo pacman -Sy wget
+                        </pre>
+                    </div><!-- download -->
+                    <div id="expansion">
+                        <h4 class="heading-typeD">インストール（展開）</h4>
+                        <p>最後に、インストール（SDカードへ展開）をします。
+                        bsdtarを使ってSD/フォルダへ展開してください。</p>
+                        <pre class="brush: bash;">
+                            sudo bsdtar -xpf ArchLinuxARM-am33x-latest.tar.gz -C SD
+                        </pre>
+                        <p>書き込みを完全に完了させるために、syncコマンド（メモリにバッファされたすべてのデータをディスクに書き込む）を実行します。</p>
+                        <pre class="brush: bash;">
+                            sync
+                        </pre>
+                    </div><!-- expansion -->
+                </div><!-- install -->
+            </div><!-- methods -->
+
+            <div id="conclusion">
+                <h2 class="heading-typeA">おわりに</h2>
+                <p>長くなってしまったため、分割して次回に続きます。<br />
+                わからないことなどがありましたら、ご質問だくさい。</p>
+            </div><!-- conclusion -->
+
+        </section><!-- body -->
+
+        <footer class="articleDetailFoot">
+            <section id="body">
+                <h2 class="heading-typeC">参考サイト</h2>
+                <ul>
+                    <li><a href="http://archlinuxarm.org/platforms/armv7/ti/beaglebone-black">Beagle Bone Black | Arch Linux ARM</a></li>
+                </ul>
+            </section><!-- body -->
+        </footer>
+    </article>
+</div><!-- pageBodyMain -->
+
+<div id="pageBodySub">
+    <nav class="localNavi">
+        <dl>
+            <dt>目次</dt>
+            <dd><a href="#objective">目的</a></dd>
+            <dd>
+                <a href="#methods">方法</a>
+                <ol>
+                    <li><a href="#provide">準備</a></li>
+                    <li><a href="#write">SDカードの準備</a></li>
+                    <ul>
+                        <li><a href="#partition">パーティション分け</a></li>
+                        <li><a href="#format">フォーマット</a></li>
+                    </ul>
+                    <li><a href="#install">インストール</a></li>
+                    <ul>
+                        <li><a href="#mount">マウント</a></li>
+                        <li><a href="#download">ダウンロード</a></li>
+                        <li><a href="#expansion">インストール</a></li>
+                    </ul>
+                </ol>
+            </dd>
+            <dd><a href="#conclusion">終わりに</a></li>
+        </dl>
+    </nav>
+</div><!-- pageBodySub -->
+
+<?php set_foot(); ?>

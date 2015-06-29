@@ -44,7 +44,7 @@ $head = <<< EOF
         <title>絵のない技術書 - %s</title>
         <link rel="stylesheet" href="/common/css/normalize.css">
         <link rel="stylesheet" href="/common/css/style.css">
-        <link rel="stylesheet" href="/common/syntaxhighlighter/styles/shCoreRDark.css">
+        <link rel="stylesheet" href="/common/syntaxhighlighter/styles/shCoreCustom.css">
 
         <script type="text/javascript" src="/common/syntaxhighlighter/scripts/shCore.js"></script>
         <script type="text/javascript">SyntaxHighlighter.all()</script>
