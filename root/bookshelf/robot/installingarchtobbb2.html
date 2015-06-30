@@ -1,0 +1,88 @@
+<?php include_once($_SERVER['DOCUMENT_ROOT'].'/common/template/template.php') ?>
+<?php set_head('ArchLinuxをBeagleBoneBlackへインストール2', __FILE__); ?>
+
+<div id="pageBodyMain">
+    <article>
+        <header class="articleDetailHead">
+            <h1 class="pageTitle">ArchLinuxをBeagleBoneBlackへインストール2</h1>
+        </header>
+
+        <section class="articleDetailBody" id="body">
+
+            <p><a href="/bookshelf/robot/installingarchtobbb1.html">ArchLinuxをBeagleBoneBlackへインストール</a>の続きです。</p>
+            <div id="methods">
+                <h2 class="heading-typeA">方法</h2>
+                <div id="install">
+                    <h3 class="heading-typeB">ブートローダーのインストール</h3>
+                    <div id="mount">
+                        <h4 class="heading-typeD">マウント</h4>
+                        <p>作業のために適当なディレクトリにマウントします。
+                        すでにマウントしている場合は必要ありません。
+                        今回は~/Document/SDとします。</p>
+                        <pre class="brush: bash;">
+                            $ mkdir -p ~/Document/SD
+                            $ cd ~/Document
+                        </pre>
+                        <p>マウントします。</p>
+                        <pre class="brush: bash;">
+                            $ sudo mount /dev/devicename1 ~/Document/SD
+                        </pre>
+                    </div><!-- mount -->
+                    <div id="expansion">
+                        <h4 class="heading-typeD">ブートローダーのインストール（書き込み）</h4>
+                        <p>ddコマンドでブートローダーを書き込みます。devicenameは適宜置き換えてください。</p>
+                        <pre class="brush: bash;">
+                            sudo dd if=SD/boot/MLO of=/dev/devicename count=1 seek=1 conv=notrunc bs=128k
+                            sudo dd if=SD/boot/u-boot.img of=/dev/devicename count=2 seek=1 conv=notrunc bs=384k
+                        </pre>
+                        <p>アンマウントします。</p>
+                        <pre class="brush: bash;">
+                            sudo umount SD
+                        </pre>
+                        <p>書き込みを完全に完了させるために、syncコマンド（メモリにバッファされたすべてのデータをディスクに書き込む）を実行します。</p>
+                        <pre class="brush: bash;">
+                            sync
+                        </pre>
+                    </div><!-- expansion -->
+                </div><!-- install -->
+            </div><!-- methods -->
+
+            <div id="conclusion">
+                <h2 class="heading-typeA">おわりに</h2>
+                <p>以上でインストールは完了です。SDカードをパソコンから取り外してください。起動・設定については別の回で説明します。<br />
+                わからないことなどがありましたら、ご質問だくさい。</p>
+            </div><!-- conclusion -->
+
+        </section><!-- body -->
+
+        <footer class="articleDetailFoot">
+            <section id="body">
+                <h2 class="heading-typeC">参考サイト</h2>
+                <ul>
+                    <li><a href="http://archlinuxarm.org/platforms/armv7/ti/beaglebone-black">Beagle Bone Black | Arch Linux ARM</a></li>
+                </ul>
+            </section><!-- body -->
+        </footer>
+    </article>
+</div><!-- pageBodyMain -->
+
+<div id="pageBodySub">
+    <nav class="localNavi">
+        <dl>
+            <dt>目次</dt>
+            <dd>
+                <a href="#methods">方法</a>
+                <ol>
+                    <li><a href="#install">インストール</a></li>
+                    <ul>
+                        <li><a href="#mount">マウント</a></li>
+                        <li><a href="#expansion">インストール</a></li>
+                    </ul>
+                </ol>
+            </dd>
+            <dd><a href="#conclusion">終わりに</a></li>
+        </dl>
+    </nav>
+</div><!-- pageBodySub -->
+
+<?php set_foot(); ?>
