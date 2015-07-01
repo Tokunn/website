@@ -1,0 +1,191 @@
+<?php include_once($_SERVER['DOCUMENT_ROOT'].'/common/template/template.php') ?>
+<?php set_head('BeagleBoneBlack(ArchLinux)の起動', __FILE__); ?>
+
+<div id="pageBodyMain">
+    <article>
+        <header class="articleDetailHead">
+            <h1 class="pageTitle">BeagleBoneBlack(ArchLinux)の起動</h1>
+        </header>
+
+        <section class="articleDetailBody" id="body">
+
+            <div id="objective">
+                <h2 class="heading-typeA">目的</h2>
+                <p>今回はBeagleBoneBlackについてです。<br />
+                <a href="/bookshelf/robot/installingarchtobbb1.html">前回</a>作成したArchLinuxのSDカードを使ってBeagleBoneBlackを起動していきます。<br />
+                起動したあと、便利に使うための説明などをしていきたいと思います。</p>
+            </div><!-- objective -->
+
+            <div id="methods">
+                <h2 class="heading-typeA">方法</h2>
+                <p>では、ここからはBeagleBoneBlackの起動を行っていきます。</p>
+                <p>BeagleBoneBlackはディスプレイにマイクロHDMIケーブルを使うのですが、高いので今回は使用せずに、ディスプレイなしでBeagleBoneBlackのセットアップを行います。
+                方法は、同じネットワークへ接続してsshで繋ぐ方法と、USB-Serialコンバータを使用してシリアルコンソールでログインする方法（さらにあと１つ方法）があります。
+                今回は前者の、ネットワークごしにログインします。この方法ではIPアドレスがわからなくても、sshで接続することができます。</p>
+                <div id="provide">
+                    <h3 class="heading-typeB">準備</h3>
+                    <p>まずは下記のものを用意してください</p>
+                    <ol>
+                        <li>BeagleBoneBlack (Rev C)</li>
+                        <li>ArchLinuxがインストールされたマイクロSDカード</li>
+                        <li>LANケーブル</li>
+                        <li>MiniUSB-B to USB-A ケーブル</li>
+                        <li>ネットワークに接続したLinuxマシン</li>
+                    </ol>
+                    <p>(1) BeagleBoneBlack には種類が複数ありますが、現在最新のRev Cを使用します。</p>
+                    <p>(2) BeagleBoneBlackはRaspberryPi B+などと同様にマイクロSDカードを使用します。
+                    <a href="/bookshelf/robot/installingarchtobbb1.html">こちら</a>の通りインストールをしておいてください。<br />
+                    内部ストレージもありますが、インストールにはSDカードを使用しないとできません。
+                    内部ストレージの方が早いので、SDで起動した後に内部ストレージへインストールをお勧めします。</p>
+                    <p>(3) BeagleBoneBlackをネットワークに接続するためにLANケーブルを使用します。有線でないと設定できません。</p>
+                    <p>(4) BeagleBoneBlackはMiniBで電源供給を行います。
+                    RaspberryPiと異なり、設定をするとこのポートを使って(ネットワークケーブルを使用せずに)パソコンからログインできるようになります。</p>
+                </div><!-- provide -->
+
+                <div id="start">
+                    <h3 class="heading-typeB">BeagleBoneBlackの起動</h3>
+                    <p>まず、<a href="/bookshelf/robot/installingarchtobbb1.html">こちら</a>で作成したSDカードをBeagleBoneBlackに差し込んでください。<p>
+                    <p>ネットワークへ接続するために、有線LANでルータとBeagleBoneBlackを接続してください。</p>
+                    <p>MiniUSBケーブルでBeagleBoneBlackとパソコンをつなぐと、電源が供給されて、BeagleBoneBlackが起動します。
+                    しかし、デフォルトではeMMC（内蔵メモリ）に入っているDebianが起動してしまうので、SDカードから起動させるために、SDカードを差し込んだ口側にあるボタンを押しながら、USBケーブルを接続してください。</p>
+                    <p>青いLEDが何度か点滅したら、ボタンから手を話しても大丈夫です。<br />
+                    しばらく待つと、LEDの点滅が一定周期になって起動したことがわかります。</p>
+                    <p>起動には20~30秒ほどかかります。<br />これで起動は完了です。</p>
+                </div><!-- start -->
+
+                <div id="connect">
+                    <h3 class="heading-typeB">BeagleBoneBlackへ接続</h3>
+                    <p>次に、用意しておいたLinuxマシンからBeagleBoneBlackへ接続します。
+                    ここからは、Linuxマシンでの作業です。</p>
+                    <p>LinuxマシンとBeagleBoneBlackは同じネットワークへ接続しておいてください。</p>
+                    <p>BeagleBoneBlackへはsshを使って接続します。sshは、<br />
+                    $ ssh username@ipaddress <br />
+                    のように指定して接続します。</p>
+                    <p>今回インストールしたArchLinuxのusernameはrootに設定されています。</p>
+                    <p>では、ipaddressはどのようにしたらわかるのでしょうか？<br />
+                    インストールしたArchLinuxはIPアドレスはDHCPサーバから動的に取得するように設定されているため、IPアドレスがわかりません。</p>
+                    <div id="getip">
+                        <h4 class="heading-typeD">IPアドレスを探す</h4>
+                        <p>このような場合にはnmapを使用してIPアドレスを調べます。</p>
+                        <p>nmapはポートスキャンなどに使われるネットワークツールです。
+                        今回は、ネットワーク上に存在するすべてのマシンへパケットを送信して、SSH接続を待ち受けている（22番ポートが開いている）マシンを探します。<br />
+                        場合によっては、ネットワーク上に存在する他の人に迷惑をかけてしまうので、閉じた環境で実施してください。</p>
+                        <p>まずは、BeagleBoneBlackを探す範囲を決定します。</p>
+                        <p>LinuxマシンのIPアドレスをifconfigで取得します。
+                        同じネットワークに接続しているため、BeagleBoneBlackのアドレスの範囲を推測することができます。</p>
+                        <pre class="brush: bash;">
+                            $ ifconfig
+                            wlp2s0: flags=4163 UP,BROADCAST,RUNNING,MULTICAST   mtu 1500
+                                    inet 192.168.1.5  netmask 255.255.255.0  broadcast 192.168.1.255
+                                    inet6 2408:f3:447d:0:3fa5:eb78:c809:d96  prefixlen 64  scopeid 0x0 global
+                                    inet6 fe80::f2ab:fd9f:60ae:e021  prefixlen 64  scopeid 0x20 link
+                                    ether 40:25:c2:f5:53:2c  txqueuelen 1000  (Ethernet)
+                                    RX packets 7864  bytes 3785892 (3.6 MiB)
+                                    RX errors 0  dropped 0  overruns 0  frame 0
+                                    TX packets 4651  bytes 794902 (776.2 KiB)
+                                    TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+                        </pre>
+                        <p>私の環境では、上記のように表示されました。inetのうしろにある192.18.1.5がIPアドレスです。</p>
+                        <p>環境によって、IPアドレスや、デバイス名(wlp2s0 や enp4s0 eth0)は変わりますが、IPアドレスを見つけてください。</p>
+                        <p>BeagleBoneBlackも同じネットワーク上にいるため、さきほど取得したIP:192.168.1.5より、BeagleBoneBlackのIPアドレスは192.168.1.1 〜 192.168.1.255であることがわかります。</p>
+                        <p>ここまで推測できたのでnmapを使って、推測した範囲内のマシン全てにパケットを送ります。<br />
+                        192.168.1.1 〜 192.168.1.255の範囲を指定するためには、192.168.1.1-255と打ち込みます。</p>
+                        <p>IPアドレスは適宜置き換えてください。</p>
+                        <pre class="brush: bash;">
+                            $ nmap -p22 192.168.1.1-255
+                        </pre>
+                        <p>しかし、たくさんのマシンが表示されて22番ポートが開いているマシンがわかりづらいので、grepに流し込んでopenのものだけ表示させます。</p>
+                        <pre class="brush: bash;">
+                            $ nmap -p22 192.168.1.1-255 | grep -i -B3 open
+                            Nmap scan report for 192.168.1.6
+                            Host is up (0.011s latency).
+                            PORT    STATE SERVICE
+                            22/tcp open ssh
+                        </pre>
+                        <p>私の環境では、上記のように表示されました。
+                        forの後ろにあるのが、22番ポートが開いているマシンのIPアドレスです。</p>
+                        <p>これで、BeagleBoneBlack（だと思われるマシン）のIPアドレスがわかりました。
+                        もし複数表示された場合は、それぞれのマシンにssh接続を試してみてください。
+                        正しいマシンにのみログインできるはずです。
+                        （BeagleBoneBlackが複数ある場合は別ですが）</p>
+                    </div><!-- getip -->
+                    <div id="ssh">
+                        <h4 class="heading-typeD">SSHで接続する</h4>
+                        <p>BeagleBoneBlackのIPアドレスがわかったため、これでやっと接続できます。</p>
+                        <p>$ ssh username@ipaddress<br />
+                        のusrenameをroot、ipaddressを先ほど発見したIPアドレスに置き換えて接続します。</p>
+                        <pre class="brush: bash;">
+                            $ ssh root@192.168.1.6
+                        </pre>
+                        <p>「The authenticity of host '192.168.1.* (192.168.1.*)' can't be established.<br />
+                        ECDSA key fingerprint is ********************::.<br />
+                        Are you sure you want to continue connecting (yes/no)?」<br />
+                        と聞かれたら、yesと入力してください。<br />
+                        要は「これまでに接続したことがないけど信頼できるシステムなの？」ということです。</p>
+                        <pre class="brush: plain;">
+                            Are you sure you want to continue connecting (yes/no)?  yes
+                        </pre>
+                        <p>もし、「Warning: Permanently added '192.168.1.*' (ECDSA) to the list of known hosts.
+                        ssh_packet_read: Connection closed」と言われて接続できない場合は、以前に同じIPアドレスのホストに接続したことがあるようです。
+                        ホストが変わったため、次のように入力してそのIPアドレスのsshのリストを初期化してみてください。</p>
+                        <p>ipaddressは適宜置き換えてください。</p>
+                        <pre class="brush: bash;">
+                            $ ssh-keygen -R ipaddress
+                        </pre>
+                        <p>うまく接続できると、「root@192.168.1.6's password:」とパスワードの入力を求められます。
+                        デフォルトでrootのパスワードは「root」になっているため、rootと入力してください。</p>
+                        <pre class="brush: plain;">
+                            root@192.168.1.6's password: root
+                        </pre>
+                        <p>コンソールの左端が、「[root@alarm ~]#」になったら接続成功です。</p>
+                        <pre class="brush: bash;">
+                            [root@alarm ~]#
+                        </pre>
+                    </div><!-- ssh -->
+                </div><!-- connect -->
+
+            </div><!-- methods -->
+            <p><a href="/bookshelf/robot/setuparchbbb.html">BeagleBoneBlack(ArchLinux)の設定</a>へ続く</p>
+
+            <div id="conclusion">
+                <h2 class="heading-typeA">おわりに</h2>
+                <p>長くなってしまったため、分割して<a href="/bookshelf/robot/setuparchbbb.html">次回</a>に続きます。<br />
+                わからないことなどがありましたら、ご質問だくさい。</p>
+                <p>2015/6/30</p>
+            </div><!-- conclusion -->
+
+        </section><!-- body -->
+
+        <footer class="articleDetailFoot">
+            <section id="body">
+                <h2 class="heading-typeC">参考サイト</h2>
+                <ul>
+                </ul>
+            </section><!-- body -->
+        </footer>
+    </article>
+</div><!-- pageBodyMain -->
+
+<div id="pageBodySub">
+    <nav class="localNavi">
+        <dl>
+            <dt>目次</dt>
+            <dd><a href="#objective">目的</a></dd>
+            <dd>
+                <a href="#methods">方法</a>
+                <ol>
+                    <li><a href="#provide">準備</a></li>
+                    <li><a href="#start">起動</a></li>
+                    <li><a href="#connect">接続</a></li>
+                    <ul>
+                        <li><a href="#getip">IPアドレスを探す</a></li>
+                        <li><a href="#ssh">SSHで接続する</a></li>
+                    </ul>
+                </ol>
+            </dd>
+            <dd><a href="#conclusion">終わりに</a></li>
+        </dl>
+    </nav>
+</div><!-- pageBodySub -->
+
+<?php set_foot(); ?>

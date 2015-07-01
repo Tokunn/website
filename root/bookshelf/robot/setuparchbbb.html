@@ -1,0 +1,237 @@
+<?php include_once($_SERVER['DOCUMENT_ROOT'].'/common/template/template.php') ?>
+<?php set_head('BeagleBoneBlack(ArchLinux)の設定', __FILE__); ?>
+
+<div id="pageBodyMain">
+    <article>
+        <header class="articleDetailHead">
+            <h1 class="pageTitle">BeagleBoneBlack(ArchLinux)の設定</h1>
+        </header>
+
+        <section class="articleDetailBody" id="body">
+
+            <p><a href="/bookshelf/robot/startarchbbb.html">BeagleBoneBlack(ArchLinux)の起動</a>の続きです。</p>
+            <div id="methods">
+
+                <h2 class="heading-typeA">方法</h2>
+
+                <p>では、ここからはBeagleBoneBlackの設定を行っていきます。</p>
+                <div id="update">
+                    <h3 class="heading-typeB">アップデート</h3>
+                    <p>まずはOSのアップデートを行います。pacmanを実行してください。</p>
+                    <pre class="brush: bash;">
+                        $ pacman -Syu
+                    </pre>
+                    <p>:: Proceed with installation? [Y/n]と聞かれたら、yを入力してください。</p>
+                    <pre class="brush: bash;">
+                        :: Proceed with installation? [Y/n] y
+                    </pre>
+                    <p>もし、-bash: pacman: command not foundと言われたら、それはSDカードから起動できていません。
+                    <a href="/bookshelf/robot/startarchbbb.html#start">こちら</a>見ながら、もう一度起動しなおしてみてください。</p>
+                    <p>アップデート完了までしばらくお待ちください。</p>
+                </div><!-- update -->
+
+                <div id="staticip">
+                    <h3 class="heading-typeB">固定IPの設定</h3>
+                    <p>今後はnmapを使って総当りアクセスをしないように固定IPを割り振って、一発でアクセスできるようにします。</p>
+                    <p>一般的なネットワーク上の固定IPの方法は<a href="/bookshelf/linux/staticip.html">こちら</a>を見て設定してください。
+                    （<a href="/bookshelf/linux/staticip.html">Linuxの固定IP設定</a>）</p>
+                </div><!-- staticip -->
+
+                <div id="usbconnection">
+                    <h3 class="heading-typeB">USBでのSSH接続</h3>
+                    <p>これらの方法ではネットワークとルータが必要ですが、BeagleBoneBlackではさらにもうひとつアクセス方法を提供しています。</p>
+                    <p>それは、電源供給に使用しているMiniUSBポートを使った接続です。(USB Ethernet)(USB 仮想LAN)</p>
+                    <p>RaspberryPiでは、このポートは電源供給にしか使えませんが、BeagleBoneBlackはなんとこのポートを通じてSSH接続することができます。</p>
+                    <p>しかし、デフォルトでは使用できないので使うための設定をしていきます。</p>
+                    <div id="enableusb">
+                        <h4 class="heading-typeD">usbネットワークインターフェースの有効化</h4>
+                        <p>まずは、usbのネットワークインターフェースを有効化します。</p>
+                        <p>最初に、現在認識されているネットワークインターフェースをチェックし見ましょう。</p>
+                        <pre class="brush: bash;">
+                            $ ip link
+                            1: lo: ..................
+                            2: eth0: ...............
+                        </pre>
+                        <p>loとeth0の２つが表示されると思います。
+                        ここにusb0を追加することでusbをネットワークインターフェースとして使うことができるようになります。</p>
+                        <p>usbネットワークインターフェースを有効にするために次のコマンドを実行してカーネルにg_etherを読み込ませます。
+                        (gとetherの間はアンダーバー)</p>
+                        <pre class="brush: bash;">
+                            $ modprobe g_ether
+                        </pre>
+                        <p>もう一度、認識されているネットワークインターフェースを確認してみましょう。</p>
+                        <pre class="brush: bash;">
+                            $ ip link
+                            1: lo: .................
+                            2: eth0: ...............
+                            3: usb0: ..............
+                        </pre>
+                        <p>usb0が追加されていれば成功です。</p>
+                        <p>最後にip link upで有効になります。</p>
+                        <pre class="brush: bash;">
+                            $ ip link set up usb0
+                        </pre>
+                        <p>ifconfigで確認してみましょう。</p>
+                        <pre class="brush: bash;">
+                            $ ifconfig usb0
+                        </pre>
+                        <p>usb0の情報が表示されれば完了です。</p>
+                    </div><!-- enableusb -->
+                    <div id="autoscript">
+                        <h4 class="heading-typeD">自動設定スクリプトの作成</h4>
+                        <p>これらの操作は、再起動するとすべて初期化されてしまいます。</p>
+                        <p>そのため、公式で永続的に設定する方法があるのですが、私の環境ではうまく動作しなかったため、ゴリ押しで起動するたびにこれらの操作を自動でするPythonスクリプトを組みます。</p>
+                        <p>スクリプトは下記のようなものになっています。</p>
+                        <pre class="brush: python;">
+                            #!/usr/bin/env python3
+                            # -*- coding: UTF-8 -*-
+
+                            import os, sys
+                            import subprocess
+
+                            #----- call_system() -----#
+                            def call_system(cmd):
+                                splitted_cmd = cmd.split()
+                                subprocess.call(splitted_cmd)
+
+                            #----- main() -----#
+                            def main():
+                                # Add IP Adress
+                                cmd = "modprobe g_ether"
+                                call_system(cmd)
+                                cmd = "ip link set usb0 up"
+                                call_system(cmd)
+                                cmd = "ip addr add 192.168.7.2/24 dev usb0"
+                                call_system(cmd)
+
+                            if __name__ == '__main__':
+                                try:
+                                    main()
+                                except KeyboardInterrupt:
+                                    print("\nCtrl+C - END")
+                        </pre>
+                        <p><a href="/bookshelf/robot/start_conf.py">このファイル</a>を/opt/bin/start_conf.pyとして保存してください。</p>
+                        <p>startとconfの間はアンダーバー</p>
+                        <pre class="brush: bash;">
+                            $ mkdir -p /opt/bin/
+                            $ cd /opt/bin/
+                            $ pacman -S wget
+                            $ wget http://tokun.net/bookshelf/robot/start_conf.py
+                            $ chmod 755 start_conf.py
+                            $ pacman -S python3
+                        </pre>
+                        <p>次に、このスクリプトをsystemdを使って自動起動させます。</p>
+                        <p>systemdに登録するためには、.serviceファイルを書きます。
+                        今回は、別のスクリプトを起動させるだけなので、とても簡単なものになっています。</p>
+                        <pre class="brush: plain;">
+                            [Unit]
+                            Description=Beagle Bone Configuration
+                            After=local-fs.target
+
+                            [Service]
+                            Type=oneshot
+                            ExesStart=/opt/bin/start_conf.py
+
+                            [Install]
+                            WantedBy=multi-user.target
+                        </pre>
+                        <p><a href="/bookshelf/robot/start_conf.service">このファイル</a>を/etc/systemd/system/start_conf.serviceとして保存してください。</p>
+                        <p>startとconfの間はアンダーバー</p>
+                        <pre class="brush: bash;">
+                            $ cd /etc/systemd/system/
+                            $ wget http://tokunn.net/bookshelf/robot/start_conf.service
+                        </pre>
+                        <p>最後に、.serviceファイルをsystemdに登録します。</p>
+                        <pre class="brush: bash;">
+                            $ systemctl enable start_conf.service
+                        </pre>
+                        <p>これで完了です。
+                        次回起動時から自動で設定されるようになります。</p>
+                        <pre class="brush: bash;">
+                            $ reboot
+                        </pre>
+                        <p>起動時には<a href="/bookshelf/robot/startarchbbb.html#start">こちら</a>見ながら、起動してください。</p>
+                    </div><!-- autoscript -->
+
+                    <div id="connection">
+                        <h4 class="heading-typeD">SSH接続</h4>
+                        <p>では、実際に接続してみましょう。</p>
+                        <p>BeagleBoneBlackをUSBで接続したLinuxマシンで、ifconfigを打ちます</p>
+                        <pre class="brush: bash;">
+                            $ ifconfig
+                        </pre>
+                        <p>すると、普段より１つ多くデバイスが表示されると思います。
+                        私の環境では、enp0s20u1i1と表示されました。
+                        これが、BeagleBoneBlackです。</p>
+                        <p>このデバイスを使って接続するのですが、IPアドレスが割り振られていないため接続できません。</p>
+                        <p>そのため、まずはIPアドレスを割り当てます。</p>
+                        <p>先ほど、BeagleBoneBlack側のIPを192.168.7.2/24に設定しました。Linuxマシン側は192.168.7.1/24を設定しましょう。</p>
+                        <p>ip addrで割り当てます。devicenameは適宜先ほど調べてたデバイス名に置き換えてください。</p>
+                        <pre class="brush: bash;">
+                            $ sudo ip addr add 192.168.7.1/24 dev devicename
+                        </pre>
+                        <p>割り当てたら、もう一度ifconfigで確認してみましょう。</p>
+                        <pre class="brush: bash;">
+                            $ ifconfig devicename
+                        </pre>
+                        <p>192.168.7.1が割り当てられていることを確認したら、sshで接続します。</p>
+                        <pre class="brush: bash;">
+                            $ ssh root@192.168.7.2
+                        </pre>
+                        <p>パスワードはいつも通りrootです。</p>
+                        <p>コンソールの左端に[root@alarm ~]#と表示されたら成功です。</p>
+                        <p>インターネット接続はできませんが、これでBeagleBoneBlackとパソコンさえあれば、ネットワークなしでも接続できるようになりました。</p>
+                    </div><!-- connection -->
+
+                </div><!-- usbconnection -->
+
+            </div><!-- methods -->
+
+            <div id="conclusion">
+                <h2 class="heading-typeA">おわりに</h2>
+                <p>いかがでしたでしょうか。<br />
+                わからないことなどがありましたら、ご質問だくさい。</p>
+                <p>2015/7/1</p>
+            </div><!-- conclusion -->
+
+        </section><!-- body -->
+
+        <footer class="articleDetailFoot">
+            <section id="body">
+                <h2 class="heading-typeC">参考サイト</h2>
+                <ul>
+                    <li><a href="http://archlinuxarm.org/forum/viewtopic.php?f=48&t=7500">Arch Linux ARM • View topic - [SOLVED] BB Black - Ethernet over Mini-USB</a></li>
+                </ul>
+            </section><!-- body -->
+        </footer>
+    </article>
+</div><!-- pageBodyMain -->
+
+<div id="pageBodySub">
+    <nav class="localNavi">
+        <dl>
+            <dt>目次</dt>
+            <dd>
+                <a href="#methods">方法</a>
+                <ol>
+                    <li><a href="#setup">設定</a></li>
+                    <ul>
+                        <li><a href="#update">アップデート</a></li>
+                        <li><a href="#staticip">固定IPの設定</a></li>
+                        <li>
+                            <a href="#usbconnection">USB-SSH接続</a>
+                            <ul>
+                                <li><a href="#enableusb">USB NIの有効化</a></li>
+                                <li><a href="#autoscript">設定fileの作成</a></li>
+                                <li><a href="#connection">接続</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </ol>
+            </dd>
+            <dd><a href="#conclusion">終わりに</a></li>
+        </dl>
+    </nav>
+</div><!-- pageBodySub -->
+
+<?php set_foot(); ?>
