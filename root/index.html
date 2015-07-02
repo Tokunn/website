@@ -1,5 +1,6 @@
 <?php include_once($_SERVER['DOCUMENT_ROOT'].'/common/template/template.php') ?>
 <?php set_head('ホーム', __FILE__); ?>
+<?php include_once($_SERVER['DOCUMENT_ROOT'].'/bookshelf/bookshelf.php') ?>
 
 <div id="pageBodyMain">
     <article>
@@ -47,6 +48,8 @@
             </section><!-- writer -->
         </section><!-- about -->
 
+        <?php set_bookshelf(); ?>
+
         <footer class="articleDetailFoot">
             <section>
                 <h2 class="heading-typeC">参考サイト</h2>
@@ -70,6 +73,13 @@
                     <li><a href="#writer">筆者について</a></li>
                 </ol>
             </dd>
+            <dd>
+                <a href="#bookshelf">記事・コンテンツ</a>
+                <ol>
+                    <li><a href="#program">プログラミング</a></li>
+                    <li><a href="#linux">Linux</a></li>
+                    <li><a href="#image">画像処理</a></li>
+                    <li><a href="#robot">組み込み技術</a></li>
         </dl>
     </nav>
 </div><!-- pageBodySub -->
