@@ -1,34 +1,146 @@
 <?php include_once($_SERVER['DOCUMENT_ROOT'].'/common/template/template.php') ?>
-<?php set_head('固定IP', __FILE__); ?>
+<?php set_head('Linuxの固定IP設定', __FILE__); ?>
 
 <div id="pageBodyMain">
     <article>
         <header class="articleDetailHead">
-            <h1 class="pageTitle">固定IP</h1>
-            <figure>
-                <img src="/common/img/comingsoon.png" alt="" width="720" height="392">
-            </figure>
+            <h1 class="pageTitle">Linuxの固定IP設定</h1>
         </header>
 
-        <section class="articleDetailBody">
-            <h2 class="heading-typeA">準備中です</h2>
-            <p>
-                作成中です。
-                今しばらくお待ちください。
-            </p>
-            <!-- <section>
-                <h3 class="heading-typeB">サブタイトル</h3>
-                <p>contents</p>
-                </section> -->
-        </section>
+        <section class="articleDetailBody" id="body">
+
+            <div id="objective">
+                <h2 class="heading-typeA">目的</h2>
+                <p>今回はLinuxの固定IPの設定についてです。</p>
+                <p>サーバや組み込みなどではDHCPを用いたIPアドレスの割当ではなく、事前にデバイスとIPアドレスが関連付けられている固定IPの方が多く用いられます。</p>
+                <p>今回は、そんな任意のIPアドレスの割当方法をやっていきたいと思います。</p>
+            </div><!-- objective -->
+
+            <div id="methods">
+                <h2 class="heading-typeA">方法</h2>
+                <p>では、ここからはIPアドレスの設定を行っていきます。</p>
+                <p>Linuxの中でも、ディストリビューションによって採用するソフトが変わるため、今回はArchLinuxなどnetctlを使うOSをメインにやっていきます。</p>
+                <div id="provide">
+                    <h3 class="heading-typeB">準備</h3>
+                    <p>まずは下記のものを用意してください</p>
+                    <ol>
+                        <li>ネットワークに接続したLinuxマシン</li>
+                    </ol>
+                    <p>以上です。</p>
+                </div><!-- provide -->
+
+                <div id="temporary">
+                    <h3 class="heading-typeB">一時的なIPアドレスの割当</h3>
+                    <p>この方法では、再起動すると設定が初期化されてしまうので、恒久的な設定をしたい場合は後述の方法で行ってください。</p>
+                    <p>この方法は、接続したDHCP機能がないデバイスと通信がしたいときなどに一時的に使用します。</p>
+                    <p>まずは、設定するデバイス名を調べてください。</p>
+                    <pre class="brush: bash;">
+                        $ ifconfig
+                    </pre>
+
+                    <div id="temporary_arch">
+                        <h4 class="heading-typeD">ArchLinuxの場合</h4>
+                        <p>ipを使って一時的に設定します。</p>
+                        <p>デバイス名がわかったら、下記のコマンドを実行します。IPアドレス、サブネットマスク、デバイス名は適宜設定してください。</p>
+                        <pre class="brush: bash;">
+                            $ sudo ip addr add 192.168.7.2/24 dev enp4s0"
+                        </pre>
+                        <p>もう一度ifconfigで確認して、IPアドレスが割り当てられていたら成功です。</p>
+                    </div><!-- temporary_arch -->
+                </div><!-- temporary -->
+
+                <div id="permanent">
+                    <h3 class="heading-typeB">恒久的なIPアドレスの割当</h3>
+                    <p>この方法で設定したIPアドレスは再起動しても設定が維持されます。</p>
+                    <p>多くの場合はこちらの方法を使います。</p>
+                    <p>まずは、設定するデバイス名を調べてください。</p>
+                    <pre class="brush: bash;">
+                        $ ifconfig
+                    </pre>
+                    <div id="permanent_arch">
+                        <h4 class="heading-typeD">ArchLinuxの場合</h4>
+                        <p>ArchLinuxはnetctlを採用しているため、設定にはnetctlを使います。</p>
+                        <p>特徴として、デバイスごとに設定ファイルを作成して有効にします。</p>
+                        <p>まずは、設定ファイルのテンプレートをコピーします。</p>
+                        <pre class="brush: bash;">
+                            $ sudo cp /etc/netctl/examples/ethernet-static /etc/netctl/staticip
+                        </pre>
+                        <p>コピーしてきたファイルは下記のようなものになっています。</p>
+                        <pre class="brush: bash;">
+                           Description='A basic static ethernet connection'
+                           Interface=eth0
+                           Connection=ethernet
+                           IP=static
+                           Address=('192.168.1.23/24' '192.168.1.87/24')
+                           #Routes=('192.168.0.0/24 via 192.168.1.2')
+                           Gateway='192.168.1.1'
+                           DNS=('192.168.1.1')
+                        </pre>
+                        <p>インターフェイスやIPアドレスなどは適宜設定してください。</p>
+                        <p>私の環境では、下記のように設定ました。</p>
+                        <pre class="brush: bash;">
+                           Description='A basic static ethernet connection'
+                           Interface=enp4s0
+                           Connection=ethernet
+                           IP=static
+                           Address=('192.168.1.23/24')
+                           Gateway='192.168.1.1'
+                           DNS=('8.8.8.8')
+                        </pre>
+                        <p>ファイルを保存したら次に、有効にします。</p>
+                        <pre class="brush: bash;">
+                            $ sudo netctl enable staticip
+                        </pre>
+                        <p>再起動後に固定IPが有効になります。</p>
+                        <pre class="brush: bash;">
+                            $ sudo reboot
+                        </pre>
+                    </div><!-- permanent_arch -->
+
+                    <div id="permanent_ubuntu">
+                        <h4 class="heading-typeD">Ubuntu・Debianの場合</h4>
+                        <p>UbuntuやDebianでは、/etc/network/interfacesを編集することで実現します。</p>
+                        <p>/etc/network/interfacesを開いてください。<br />
+                        ファイルには下記のようなものが書いてあると思います。</p>
+                        <pre class="brush: bash;">
+                            auto lo
+                            iface lo inet loopback
+                        </pre>
+                        <p>これはloの設定です。</p>
+                        <p>今回は、さらにこれに設定したいデバイスの情報を追加していきます。</p>
+                        <p>このファイルの下に下記の情報を追加してください。
+                        デバイス名・アドレス・ネットマスクは適宜変更してください。</p>
+                        <pre class="brush: bash;">
+                            auto eth0
+                            iface eth0 inet static
+                            address 192.168.1.200
+                            netmask 255.255.255.0
+                            gateway 192.168.1.1
+                            dns-nameservers 8.8.8.8
+                        </pre>
+                        <p>ファイルを保存し、再起動後に固定IPが有効になります。</p>
+                        <pre class="brush: bash;">
+                            $ sudo reboot
+                        </pre>
+                    </div><!-- permanent_ubuntu -->
+                </div><!-- permanent -->
+
+            </div><!-- methods -->
+
+            <div id="conclusion">
+                <h2 class="heading-typeA">おわりに</h2>
+                わからないことなどがありましたら、ご質問だくさい。</p>
+                <p>2015/7/02</p>
+            </div><!-- conclusion -->
+
+        </section><!-- body -->
 
         <footer class="articleDetailFoot">
-            <section>
-                <!-- <h2 class="heading-typeC">参考サイト</h2>
+            <section id="body">
+                <h2 class="heading-typeC">参考サイト</h2>
                 <ul>
-                    <li><a href="http://www.example.com/">example.com</a></li>
-                    </ul> -->
-            </section>
+                </ul>
+            </section><!-- body -->
         </footer>
     </article>
 </div><!-- pageBodyMain -->
@@ -37,16 +149,23 @@
     <nav class="localNavi">
         <dl>
             <dt>目次</dt>
-            <!-- <dd><a href="link">目的</a></dd>
-            <dd><a href="link">原理</a></dd>
-            <dd><a href="link">使用機器</a></dd>
+            <dd><a href="#objective">目的</a></dd>
             <dd>
-                <a href="link">方法</a>
+                <a href="#methods">方法</a>
                 <ol>
-                    <li><a href="link">準備</a></li>
-                    <li><a href="link">実施</a></li>
+                    <li><a href="#provide">準備</a></li>
+                    <li><a href="#temporary">一時的な割当</a></li>
+                    <ul>
+                        <li><a href="#temporary_arch">ArchLinux</a></li>
+                    </ul>
+                    <li><a href="#permanent">恒久的な割当</a></li>
+                    <ul>
+                        <li><a href="#permanent_arch">ArchLinux</a></li>
+                        <li><a href="#permanent_ubuntu">Ubuntu</a></li>
+                    </ul>
                 </ol>
-                </dd> -->
+            </dd>
+            <dd><a href="#conclusion">終わりに</a></li>
         </dl>
     </nav>
 </div><!-- pageBodySub -->
