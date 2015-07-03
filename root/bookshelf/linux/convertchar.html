@@ -1,0 +1,110 @@
+<?php include_once($_SERVER['DOCUMENT_ROOT'].'/common/template/template.php') ?>
+<?php set_head('Linux・Windowsでのテキスト変換', __FILE__); ?>
+
+<div id="pageBodyMain">
+    <article>
+        <header class="articleDetailHead">
+            <h1 class="pageTitle">Linux・Windowsでのテキスト変換</h1>
+        </header>
+
+        <section class="articleDetailBody" id="body">
+
+            <div id="objective">
+                <h2 class="heading-typeA">目的</h2>
+                <p>今回はLinuxとWindowsのテキスト変換についてです。</p>
+                <p>LinuxとWindows間でソースコードなどテキストファイルをやりとりしたいことがあります。
+                その時、USBやクラウドなどを使って転送をすること自体はできますが、テキストエディタで開いてもうまく表示されないことがあります。</p>
+                <p>これはWindowsとLinuxでは改行コードが異なるためです。</p>
+                <p>Linuxの改行コードはLFのみです。\nのみで改行して行の頭まで移動します。<br />
+                Windowsの改行コードはCR/LFの２つです。
+                \r\nで改行して行の頭まで移動します。</p>
+                <p>このため、LinuxのテキストファイルをWindowsで開くと改行がされておらず、WindowsのテキストファイルをLinuxで開くと開業されるときに最語に^Mがついてしまいます。</p>
+                <p>今回はこれらの相互変換をやっていきたいと思います。</p>
+            </div><!-- objective -->
+
+            <div id="methods">
+
+                <h2 class="heading-typeA">方法</h2>
+                <div id="provide">
+                    <h3 class="heading-typeB">準備</h3>
+                    <p>まずは下記のものを用意してください</p>
+                    <ol>
+                        <li>ネットワークに接続したLinuxマシン</li>
+                    </ol>
+                    <p>以上です。</p>
+                </div><!-- provide -->
+
+                <div id="check">
+                    <h3 class="heading-typeB">チェック</h3>
+                    <p>文字コードのチェックはnkfにgオプションをつけて使用します。</p>
+                    <pre class="brush: bash;">
+                        $ nkf -g filename
+                    </pre>
+                </div><!-- check -->
+
+                <div id="convert">
+                    <h3 class="heading-typeB">変換</h3>
+                    <div id="linuxtowin">
+                        <h4 class="heading-typeD">LinuxからWindowsへの変換</h4>
+                        <p>LinuxのファイルをWindowsのファイルへ変換します。</p>
+                        <pre class="brush: bash;">
+                            $ nkf -w -Lu filename
+                        </pre>
+                    </div><!-- linuxtowin -->
+
+                    <div id="wintolinux">
+                        <h4 class="heading-typeD">WindowsからLinuxへの変換</h4>
+                        <p>WindowsのファイルをLinuxのファイルへ変換します。</p>
+                        <pre class="brush: bash;">
+                            $ nkf -s -Lw filename
+                        </pre>
+                    </div><!-- wintolinux -->
+                </div><!-- convert -->
+
+            </div><!-- methods -->
+
+            <div id="conclusion">
+                <h2 class="heading-typeA">おわりに</h2>
+                わからないことなどがありましたら、ご質問だくさい。</p>
+                <p>2015/7/03</p>
+            </div><!-- conclusion -->
+
+        </section><!-- body -->
+
+        <footer class="articleDetailFoot">
+            <section id="body">
+                <h2 class="heading-typeC">参考サイト</h2>
+                <ul>
+                    <li><a href="http://takuya-1st.hatenablog.jp/entry/20100511/1273585953">文字コード変換コマンドの nkfの使い方と実例をまとめました。それマグで！</a></li>
+                </ul>
+            </section><!-- body -->
+        </footer>
+    </article>
+</div><!-- pageBodyMain -->
+
+<div id="pageBodySub">
+    <nav class="localNavi">
+        <dl>
+            <dt>目次</dt>
+            <dd><a href="#objective">目的</a></dd>
+            <dd>
+                <a href="#methods">方法</a>
+                <ol>
+                    <li><a href="#provide">準備</a></li>
+                    <li><a href="#temporary">一時的な割当</a></li>
+                    <ul>
+                        <li><a href="#temporary_arch">ArchLinux</a></li>
+                    </ul>
+                    <li><a href="#permanent">恒久的な割当</a></li>
+                    <ul>
+                        <li><a href="#permanent_arch">ArchLinux</a></li>
+                        <li><a href="#permanent_ubuntu">Ubuntu</a></li>
+                    </ul>
+                </ol>
+            </dd>
+            <dd><a href="#conclusion">終わりに</a></li>
+        </dl>
+    </nav>
+</div><!-- pageBodySub -->
+
+<?php set_foot(); ?>
