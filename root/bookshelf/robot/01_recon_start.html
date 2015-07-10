@@ -1,0 +1,91 @@
+<?php include_once($_SERVER['DOCUMENT_ROOT'].'/common/template/template.php') ?>
+<?php set_head('ReconJetの起動', __FILE__); ?>
+
+<div id="pageBodyMain">
+    <article>
+        <header class="articleDetailHead">
+            <h1 class="pageTitle">ReconJetの起動</h1>
+        </header>
+
+        <section class="articleDetailBody" id="body">
+
+            <div id="objective">
+                <h2 class="heading-typeA">目的</h2>
+                <p>ReconJetの起動・初期設定についてです。</p>
+                <p>ReconJetはスポーツ用のメガネ型ウェアラブルデバイスです。
+                Microsoft社のHoloLensなどとは違い、現実空間へのホログラム投影ではなく、右下固定で情報を表示することができます。</p>
+            </div><!-- objective -->
+
+            <div id="methods">
+                <h2 class="heading-typeA">方法</h2>
+                <p>では、ここからはReconJetの起動を行っていきます。</p>
+                <div id="provide">
+                    <h3 class="heading-typeB">準備</h3>
+                    <p>まずは下記のものを用意してください</p>
+                    <ol>
+                        <li>ReconJet</li>
+                        <li>MicroUSBケーブル</li>
+                        <li>ネットワークに接続したWindowsマシン</li>
+                    </ol>
+                    <p>ReconJetとパソコンを接続するためにはインターネット接続が必要です。</p>
+                </div><!-- provide -->
+
+                <div id="start">
+                    <h3 class="heading-typeB">ソフトウェアのインストール</h3>
+                    <p>パソコンを使って設定をするために、ソフトウェアをインストールします。</p>
+                    <p>まずは、サイトにアクセスしてください。<a href="http://reconinstruments.com/getstarted">Get StarTed | Recon Engage</a></p>
+                    <p>ログインを求められるので登録をしてください。</p>
+                    <p>登録をして指示通り進めると、UpLinkのダウンロードボタンが表示されます。押してダウンロードしてください。</p>
+                    <p>ダウンロードしてインストールします。</p>
+                </div><!-- start -->
+
+                <div id="connect">
+                    <h3 class="heading-typeB">ReconJetの接続</h3>
+                    <p>ReconJetの本体後方にあるポートからパソコンのUSBポートをマイクロUSBケーブルでつなぎます。ReconJetの下部後ろのボタンで電源を入れます。</p>
+                    <p>ここで、（またはそれ以前に）ソフトウェア側でログインを求めれるのでブラウザを使ってログインしてください。</p>
+                    <p>あとは、ソフトウェアの指示通りにアップデートを行ってください。<p>
+                    <p>最後に、マップをダウンロードする範囲を指定します。適宜設定してください。</p>
+                    <p>あとは、ReconJetのインストラクションにしたがって操作をしてください。</p>
+                    <p>スマートフォンにRecon Engageをインストールすると接続することができます。</p>
+                </div><!-- connect -->
+
+            </div><!-- methods -->
+
+            <div id="conclusion">
+                <h2 class="heading-typeA">おわりに</h2>
+                <p>いかがでしたでしょうか。
+                わからないことなどがありましたら、ご質問だくさい。</p>
+                <p>2015/7/10</p>
+            </div><!-- conclusion -->
+
+        </section><!-- body -->
+
+        <footer class="articleDetailFoot">
+            <section id="body">
+                <h2 class="heading-typeC">参考サイト</h2>
+                <ul>
+                </ul>
+            </section><!-- body -->
+        </footer>
+    </article>
+</div><!-- pageBodyMain -->
+
+<div id="pageBodySub">
+    <nav class="localNavi">
+        <dl>
+            <dt>目次</dt>
+            <dd><a href="#objective">目的</a></dd>
+            <dd>
+                <a href="#methods">方法</a>
+                <ol>
+                    <li><a href="#provide">準備</a></li>
+                    <li><a href="#start">インストール</a></li>
+                    <li><a href="#connect">接続</a></li>
+                </ol>
+            </dd>
+            <dd><a href="#conclusion">終わりに</a></li>
+        </dl>
+    </nav>
+</div><!-- pageBodySub -->
+
+<?php set_foot(); ?>
