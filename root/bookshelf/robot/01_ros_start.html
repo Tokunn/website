@@ -1,0 +1,89 @@
+<?php include_once($_SERVER['DOCUMENT_ROOT'].'/common/template/template.php') ?>
+<?php set_head('ReconJetの起動', __FILE__); ?>
+
+<div id="pageBodyMain">
+    <article>
+        <header class="articleDetailHead">
+            <h1 class="pageTitle">ReconJetの起動</h1>
+        </header>
+
+        <section class="articleDetailBody" id="body">
+
+            <div id="objective">
+                <h2 class="heading-typeA">目的</h2>
+                <p>ロボット開発に便利なツールなどを提供してくれるROSのインストールを行います。</p>
+            </div><!-- objective -->
+
+            <div id="methods">
+                <h2 class="heading-typeA">方法</h2>
+                <div id="provide">
+                    <h3 class="heading-typeB">準備</h3>
+                    <p>まずは下記のものを用意してください</p>
+                    <ol>
+                        <p>Linux マシン</p>
+                    </ol>
+                </div><!-- provide -->
+
+                <div id="start">
+                    <h3 class="heading-typeB">ソフトウェアのインストール</h3>
+                    <p>まず、makepkgで使用するbase-develをインストールします。</p>
+                    <pre class="brush: bash;">
+                        $ sudo pacman -Sy base-devel --needed
+                    </pre>
+                    <p>ROSはyaourtを使用するため、もしインストールしていない場合はyaourtをインストールしておいてください。</p>
+                    <p>パスワードの毎回の入力を省くために、下記のように設定してください。</p>
+                    <pre class="brush: bash;">
+                        $ sudo echo SUDONOVERIF=1 >> /etc/yaourtrc
+                    </pre>
+                    <div id="aurpackages">
+                        <h4 class="heading-typeD">AUR パッケージのインストール</h4>
+                        <p>yaourtを使ってros-indigoのフルシステム
+                        （ROS,rpt,rviz,ロボットの一般的なライブラリ,2D/3Dシュミレータ,ナビゲーション,2D/3D認識）
+                        をインストールします。</p>
+                        <pre class="brush: bash;">
+                            $ yaourt -S ros-indigo-desktop-full --noconfirm --needed
+                        </pre>
+                        <p>かなり時間がかかりますのでしばらくお待ちください。</p>
+                    </div><!-- aurpackages -->
+                </div><!-- start -->
+
+            </div><!-- methods -->
+
+            <div id="conclusion">
+                <h2 class="heading-typeA">おわりに</h2>
+                <p>いかがでしたでしょうか。
+                わからないことなどがありましたら、ご質問だくさい。</p>
+                <p>2015/7/15</p>
+            </div><!-- conclusion -->
+
+        </section><!-- body -->
+
+        <footer class="articleDetailFoot">
+            <section id="body">
+                <h2 class="heading-typeC">参考サイト</h2>
+                <ul>
+                    <li><a href="http://wiki.ros.org/indigo/Installation/Arch">Installation Instructions for Indigo in Arch Linux</a></li>
+                </ul>
+            </section><!-- body -->
+        </footer>
+    </article>
+</div><!-- pageBodyMain -->
+
+<div id="pageBodySub">
+    <nav class="localNavi">
+        <dl>
+            <dt>目次</dt>
+            <dd><a href="#objective">目的</a></dd>
+            <dd>
+                <a href="#methods">方法</a>
+                <ol>
+                    <li><a href="#provide">準備</a></li>
+                    <li><a href="#start">インストール</a></li>
+                </ol>
+            </dd>
+            <dd><a href="#conclusion">終わりに</a></li>
+        </dl>
+    </nav>
+</div><!-- pageBodySub -->
+
+<?php set_foot(); ?>

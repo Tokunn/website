@@ -1,0 +1,86 @@
+<?php include_once($_SERVER['DOCUMENT_ROOT'].'/common/template/template.php') ?>
+<?php set_head('ReconJetの開発環境の構築', __FILE__); ?>
+
+<div id="pageBodyMain">
+    <article>
+        <header class="articleDetailHead">
+            <h1 class="pageTitle">ReconJetの開発環境の構築</h1>
+        </header>
+
+        <section class="articleDetailBody" id="body">
+
+            <div id="objective">
+                <h2 class="heading-typeA">目的</h2>
+                <p>ReconJetの開発環境の構築の構築を行います。</p>
+            </div><!-- objective -->
+
+            <div id="methods">
+                <h2 class="heading-typeA">方法</h2>
+                <div id="provide">
+                    <h3 class="heading-typeB">準備</h3>
+                    <p>まずは下記のものを用意してください</p>
+                    <ol>
+                        <p>Linux マシン（説明ではArchLinuxを使用）</p>
+                    </ol>
+                </div><!-- provide -->
+
+                <div id="start">
+                    <h3 class="heading-typeB">ソフトウェアのインストール</h3>
+                    <p>ReconJetはAndroidベースのReconOSが搭載されています。</p>
+                    <p>アプリ開発はAndroidアプリ開発と同様に行うことができます。</p>
+                    <p>Androidの開発は以前はEclipseとSDKを用いた方法が一般的でいしたが、新しくAndroid Studioが登場したためこちらを使用します。</p>
+                    <div id="install">
+                        <h4 class="heading-typeD">Android Studioのインストール</h4>
+                        <p>いつもどおりpacmanを使ってコマンドでインストール…といきたいところですが、Android Studioはブラウザを使ってダウンロードしてきます。</p>
+                        <p><a href="https://developer.android.com/sdk/index.html#Other">Androidのデベロッパー向けサイト</a>へアクセスしてLinuxのandroid-sdk_*****-linux.tgzをダウンロードします。</p>
+                        <p>ダウンロードしたファイルを解凍します。</p>
+                        <pre class="brush: bash;">
+                            $ tar zxvf android-sdk_*******-linux.tgz
+                        </pre>
+                        <p>アップデートします。</p>
+                        <pre class="brush: bash;">
+                            $ tools/android update sdk --no-ui
+                        </pre>
+                    </div><!-- install -->
+                </div><!-- start -->
+
+            </div><!-- methods -->
+
+            <div id="conclusion">
+                <h2 class="heading-typeA">おわりに</h2>
+                <p>いかがでしたでしょうか。
+                わからないことなどがありましたら、ご質問だくさい。</p>
+                <p>2015/7/15</p>
+            </div><!-- conclusion -->
+
+        </section><!-- body -->
+
+        <footer class="articleDetailFoot">
+            <section id="body">
+                <h2 class="heading-typeC">参考サイト</h2>
+                <ul>
+                    <li><a href="http://wiki.ros.org/indigo/Installation/Arch">Installation Instructions for Indigo in Arch Linux</a></li>
+                </ul>
+            </section><!-- body -->
+        </footer>
+    </article>
+</div><!-- pageBodyMain -->
+
+<div id="pageBodySub">
+    <nav class="localNavi">
+        <dl>
+            <dt>目次</dt>
+            <dd><a href="#objective">目的</a></dd>
+            <dd>
+                <a href="#methods">方法</a>
+                <ol>
+                    <li><a href="#provide">準備</a></li>
+                    <li><a href="#start">インストール</a></li>
+                </ol>
+            </dd>
+            <dd><a href="#conclusion">終わりに</a></li>
+        </dl>
+    </nav>
+</div><!-- pageBodySub -->
+
+<?php set_foot(); ?>

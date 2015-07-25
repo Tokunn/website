@@ -1,0 +1,112 @@
+<?php include_once($_SERVER['DOCUMENT_ROOT'].'/common/template/template.php') ?>
+<?php set_head('ROSのインストール', __FILE__); ?>
+
+<div id="pageBodyMain">
+    <article>
+        <header class="articleDetailHead">
+            <h1 class="pageTitle">ROSのインストール</h1>
+        </header>
+
+        <section class="articleDetailBody" id="body">
+
+            <div id="objective">
+                <h2 class="heading-typeA">目的</h2>
+                <p>Robot Operating SystemをUbuntuにインストールします。<p>
+            </div><!-- objective -->
+
+            <div id="methods">
+                <h2 class="heading-typeA">方法</h2>
+                <div id="provide">
+                    <h3 class="heading-typeB">準備</h3>
+                    <p>まずは下記のものを用意してください</p>
+                    <ol>
+                        <li>Ubuntu14.04マシン</li>
+                        <li>インターネット環境</li>
+                    </ol>
+                    <p>(1) Ubuntuは15.04で試したのですが、依存関係がうまくいかないため14.04で行います。<br />
+                    indigoの対応バージョンは13.10と14.04のみのようです。
+                    Ubuntu14.10と15.04を使用したい場合は、indigoではなくjadeをインストールしてください。</p>
+                    <p>今回はUbuntu14.04とindigoを使用します。</p>
+                </div><!-- provide -->
+
+                <div id="sourceslist">
+                    <h3 class="heading-typeB">sources.listのセットアップ</h3>
+                    <p>デフォルトではpackages.ros.orgのパッケージを登録していないため、登録を行います。</p>
+                    <pre class="brush: bash;">
+                        $ sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu trusty main" > /etc/apt/sources.list.d/ros-latest.list'
+                    </pre>
+                </div><!-- sourceslist -->
+                <div id="key">
+                    <h3 class="heading-typeB">鍵の設定</h3>
+                    <p>鍵の設定を行います。</p>
+                    <pre class="brush: bash;">
+                        $ wget http://packages.ros.org/ros.key -O - | sudo apt-key add -
+                    </pre>
+                </div><!-- key -->
+                <div id="update">
+                    <h3 class="heading-typeB">アップデート</h3>
+                    <p>パッケージインデックスを更新します。</p>
+                    <pre class="brush: bash;">
+                        $ sudo apt-get update
+                    </pre>
+                </div><!-- update -->
+                <div id="install">
+                    <h3 class="heading-typeB">インストール</h3>
+                    <p>インストールを行います。最小から最大までパッケージがありますが、今回はすべてインストールします。</p>
+                    <pre class="brush: bash;">
+                        $ sudo apt-get install ros-indigo-desktop-full
+                        $ sudo apt-get install python-rosinstall
+                    </pre>
+                </div><!-- install -->
+                <div id="init">
+                    <h3 class="heading-typeB">rosdepの初期化</h3>
+                    <p>rosdepを初期化します。</p>
+                    <pre class="brush: bash;">
+                        $ sudo rosdep init
+                        $ rosdep update
+                    </pre>
+                </div><!-- init -->
+            </div><!-- methods -->
+
+            <div id="conclusion">
+                <h2 class="heading-typeA">おわりに</h2>
+                <p>いかがでしたでしょうか。
+                わからないことなどがありましたら、ご質問だくさい。</p>
+                <p>2015/7/25</p>
+            </div><!-- conclusion -->
+
+        </section><!-- body -->
+
+        <footer class="articleDetailFoot">
+            <section id="body">
+                <h2 class="heading-typeC">参考サイト</h2>
+                <ul>
+                    <li><a href="http://wiki.ros.org/ja/indigo/Installation/Ubuntu">ja/indigo/installation/ubuntu</a></li>
+                </ul>
+            </section><!-- body -->
+        </footer>
+    </article>
+</div><!-- pageBodyMain -->
+
+<div id="pageBodySub">
+    <nav class="localNavi">
+        <dl>
+            <dt>目次</dt>
+            <dd><a href="#objective">目的</a></dd>
+            <dd>
+                <a href="#methods">方法</a>
+                <ol>
+                    <li><a href="#provide">準備</a></li>
+                    <li><a href="#sourceslist">sourceslist</a></li>
+                    <li><a href="#key">鍵の設定</a></li>
+                    <li><a href="#update">アップデート</a></li>
+                    <li><a href="#install">インストール</a></li>
+                    <li><a href="#init">rosdepの初期化</a></li>
+                </ol>
+            </dd>
+            <dd><a href="#conclusion">終わりに</a></li>
+        </dl>
+    </nav>
+</div><!-- pageBodySub -->
+
+<?php set_foot(); ?>
