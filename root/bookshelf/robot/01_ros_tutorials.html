@@ -1,0 +1,247 @@
+<?php include_once($_SERVER['DOCUMENT_ROOT'].'/common/template/template.php') ?>
+<?php set_head('ROSチュートリアル', __FILE__); ?>
+
+<div id="pageBodyMain">
+    <article>
+        <header class="articleDetailHead">
+            <h1 class="pageTitle">ROSチュートリアル</h1>
+        </header>
+
+        <section class="articleDetailBody" id="body">
+
+            <div id="objective">
+                <h2 class="heading-typeA">目的</h2>
+                <p><a href="http://wiki.ros.org/ja/ROS/Tutorials">
+                    wikiのチュートリアル
+                </a>を行います。</p>
+            </div><!-- objective -->
+
+            <div id="methods">
+                <h2 class="heading-typeA">方法</h2>
+                <div id="provide">
+                    <h3 class="heading-typeB">準備</h3>
+                    <p>まずは下記のものを用意してください</p>
+                    <ol>
+                        <li><a href="00_setupros.html">前回作成したマシン</a></li>
+                    </ol>
+                </div><!-- provide -->
+
+                <div id="filesystem">
+                    <h3 class="heading-typeB">ファイルシステム</h3>
+                    <p>まずは、setup.bashを読み込みます。</p>
+                    <p>bashの場合（標準）</p>
+                    <pre class="brush: bash;">
+                        $ source /opt/ros/indigo/setup.bash
+                    </pre>
+                    <p>zshの場合（シェルを変更している場合）</p>
+                    <pre class="brush: bash;">
+                        $ source /opt/ros/indigo/setup.zsh
+                    </pre>
+                    <p>これにり、rosのコマンドが使えるようになります。</p>
+                    <div id="ws">
+                        <h4 class="heading-typeD">ワークスペース</h4>
+                        <p>ROSで作業するためのワークスペースを作成します。
+                        基本的にここで作業を行います。</p>
+                        <pre class="brush: bash;">
+                            $ mkdir -p ~/catkin_ws/src
+                            $ cd ~/catkin_ws/src
+                            $ catkin_init_workspace
+                        </pre>
+                        <p>ワークスペースのビルドは次のようにして行うことができます。</p>
+                        <pre class="brush: bash;">
+                            $ cd ~/catkin_ws/
+                            $ catkin_make
+                        </pre>
+                        <p>ワークスペースを適用します。</p>
+                        <pre class="brush: bash;">
+                            $ source devel/setup.bash
+                        </pre>
+                        <p>zshの場合は上記のように.bashを.zshに変更してください。</p>
+                        <p>この読み込みはシェルを起動するたびに必要になるので、.bashrc .zshrcなどに書き込んでおくと楽です。</p>
+                    </div><!-- ws -->
+                    <div id="roscd">
+                        <h4 class="heading-typeD">roscd</h4>
+                        <p>roscdを使うとパッケージのディレクトリに移動できます。</p>
+                        <pre class="brush: bash;">
+                            $ roscd パッケージ名
+                        </pre>
+                        <p>タブ補完を使うこともできます。</p>
+                    </div><!-- roscd -->
+                </div><!-- filesystem -->
+
+                <div id="package">
+                    <h3 class="heading-typeB">パッケージ</h3>
+                    <p>ROSのcatkinパッケージはCMakeLists.txtとpackage.xmlを含む必要があります。</p>
+                    <div id="create">
+                        <h4 class="heading-typeD">パッケージの作成</h4>
+                        <p>std_msgs,rospy,roscppに依存したbeginner_tutorialsパッケージを作成します。</p>
+                        <pre class="brush: bash;">
+                            $ cd ~/catkin_ws/src
+                            $ catkin_create_pkg beginner_tutorials std_msgs rospy roscpp
+                        </pre>
+                        <p>rospackコマンドでパッケージの依存を調べることができます。</p>
+                        <pre class="brush: bash;">
+                            $ rospack depends beginner_tutorials
+                        </pre>
+                    </div><!-- create -->
+                </div><!-- package -->
+
+                <div id="build">
+                    <h3 class="heading-typeB">ビルド</h3>
+                    <div id="build_package">
+                        <h4 class="heading-typeD">パッケージのビルド</h4>
+                        <p>パッケージをビルドします。</p>
+                        <pre class="brush: bash;">
+                            $ cd ~/cakint_ws
+                            $ catkin_make
+                        </pre>
+                    </div><!-- build_package -->
+                </div><!-- build -->
+
+                <div id="understandnode">
+                    <h3 class="heading-typeB">ノード</h3>
+                    <div id="concepts">
+                        <h4 class="heading-typeD">概念</h4>
+                        <ul>
+                            <li>ノード：ノードはROSを使用して他のノードとやりとりする。</li>
+                            <li>トピック：ノードはメッセージをトピックに向けて配信し、購読して受け取る。</li>
+                            <li>メッセージ：トピックへ配信・購読するROSのデータ型。</li>
+                            <li>マスター：ROSのネームサービス。</li>
+                            <li>rosout：ROSのおけるstdout・stderr。</li>
+                            <li>roscore：マスター＋rosout＋パラメータサーバ。</li>
+                        </ul>
+                    </div><!-- concepts -->
+                    <div id="roscore">
+                        <h4 class="heading-typeD">roscore</h4>
+                        <p>roscoreはROSを使用する際に一番初めに起動させます。</p>
+                        <pre class="brush: bash;">
+                            $ roscore
+                        </pre>
+                    </div><!-- roscore -->
+                    <div id="rosrun">
+                        <h4 class="heading-typeD">rosrun</h4>
+                        <p>rosrunはパッケージ名を使用して、パッケージに含まれるノードを起動します。</p>
+                        <p>turtlesimを起動してみます。</p>
+                        <pre class="brush: bash;">
+                            $ rosrun turtlesim turtlesim_node
+                        </pre>
+                    </div><!-- rosrun -->
+                </div><!-- understandnode -->
+
+                <div id="understandtopic">
+                    <h3 class="heading-typeB">トピック</h3>
+                    <div id="topicsetup">
+                        <h4 class="heading-typeD">セットアップ</h4>
+                        <p>rosrunの続きからさらにturtle_teleop_keyを起動します。</p>
+                        <pre class="brush: bash;">
+                            $ rosrun turtlesim turtle_teleop_key
+                        </pre>
+                        <p>これで、亀を矢印キードで操作することができるようになりました。</p>
+                    </div><!-- topicsetup -->
+                    <div id="topic">
+                        <h4 class="heading-typeD">ROSトピック</h4>
+                        <p>turtlesim_nodeとturtle_teleop_keyはトピックを介して通信しています。</p>
+                        <p>rqt_graphを使って、グラフを作成することができます。</p>
+                        <pre class="brush: bash;">
+                            $ rosrun rqt_graph rqt_graph
+                        </pre>
+                        <p>rostopicを使うことでトピックの詳細を得ることができます。
+                        echoを使うとトピックのデータを見ることができます。</p>
+                        <pre class="brush: bash;">
+                            $ rostopic echo /turtle1/cmd_vel
+                        </pre>
+                        <p>rostopic listではトピックのリストを得ることができます。</p>
+                        <pre class="brush: bash;">
+                            $ rostopic list -v
+                        </pre>
+                        <p>rostopic pubではトピックを配信することができます。</p>
+                        <pre class="brush: bash;">
+                            $ rostopic pub トピック メッセージタイプ 引数
+                            $ rostopic pub -1 /turtle1/command_velocity turtlecim/Velocity -- 2.0 1.8
+                        </pre>
+                        <p>rqt_plotを使用すると、トピックのデータをグラフにすることができます。（略）</p>
+                    </div><!-- topic -->
+                </div><!-- understandtopic -->
+
+                <div id="understandservice">
+                    <h3 class="heading-typeB">サービス</h3>
+                    <p>サービスもトピックと同じノード間の通信に使われる手段の一つですが、サービスは、リクエストとレスポンスから成り立っています。</p>
+                    <p>前のままturtlesim_nodeは起動しておいてください。</p>
+                    <div id="service">
+                        <h4 id="heading-typeD">ROSサービス</h4>
+                        <p>rosserviceを使うことでサービスの詳細を得ることができます。</p>
+                        <p>listを使うと提供されるサービスを表示することができます。</p>
+                        <pre class="brush: bash;">
+                            $ rosservice list
+                        </pre>
+                        <p>callでサービスを呼び出すことができます。</p>
+                        <pre class="brush: bash;">
+                            $ rosservice call サービス 引数
+                            $ rosservice call clear
+                            $ rosservice call spwan 2 2 0.2 ""
+                        </pre>
+                        <p>rosparamを使用すると、パラメータを操作することができます。（略）</p>
+                    </div><!-- service -->
+                </div><!-- understandservice -->
+
+                <div id="debug">
+                    <h3 class="heading-typeB">デバッグ</h3>
+                    <div id="rqt">
+                        <h4 class="heading-typeD">rqt</h4>
+                        <p>rqt_consoleはログ収集フレームワークにノードからの出力を表示する機能を追加します。</p>
+                        <p>rqt_clogger_levelはノード実行時の力詳細レベルを変更できます。</p>
+                        <p>両方を起動します。</p>
+                        <pre class="brush: bash;">
+                            $ rosrun rqt_console rqt_console
+                            $ rosrun rqt_logger_level rqt_logger_level
+                        </pre>
+                        <p>これらを使用してでログを見ることができます。（略）</p>
+                    </div><!-- rqt -->
+                </div><!-- debug -->
+
+            </div><!-- methods -->
+
+            <div id="conclusion">
+                <h2 class="heading-typeA">おわりに</h2>
+                <p>いかがでしたでしょうか。
+                わからないことなどがありましたら、ご質問だくさい。</p>
+                <p>2015/7/26</p>
+            </div><!-- conclusion -->
+
+        </section><!-- body -->
+
+        <footer class="articleDetailFoot">
+            <section id="body">
+                <h2 class="heading-typeC">参考サイト</h2>
+                <ul>
+                    <li><a href="http://wiki.ros.org/ja/ROS/Tutorials">ja/ROS/Tutorials</a></li>
+                </ul>
+            </section><!-- body -->
+        </footer>
+    </article>
+</div><!-- pageBodyMain -->
+
+<div id="pageBodySub">
+    <nav class="localNavi">
+        <dl>
+            <dt>目次</dt>
+            <dd><a href="#objective">目的</a></dd>
+            <dd>
+                <a href="#methods">方法</a>
+                <ol>
+                    <li><a href="#provide">準備</a></li>
+                    <li><a href="#filesystem">ファイルシステム</a></li>
+                    <li><a href="#package">パッケージ</a></li>
+                    <li><a href="#build">ビルド</a></li>
+                    <li><a href="#understandnode">ノード</a></li>
+                    <li><a href="#understandtopic">トピック</a></li>
+                    <li><a href="#understandservice">サービス</a></li>
+                    <li><a href="#debug">デバッグ</a></li>
+                </ol>
+            </dd>
+            <dd><a href="#conclusion">終わりに</a></li>
+        </dl>
+    </nav>
+</div><!-- pageBodySub -->
+
+<?php set_foot(); ?>
