@@ -157,7 +157,7 @@
                         <p>rostopic pubではトピックを配信することができます。</p>
                         <pre class="brush: bash;">
                             $ rostopic pub トピック メッセージタイプ 引数
-                            $ rostopic pub -1 /turtle1/command_velocity turtlecim/Velocity -- 2.0 1.8
+                            $ rostopic pub -1 /turtle1/cmd_vel geometry_msgs/Twist -- '[2.0, 0.0, 0.0]' '[0.0, 0.0, 1.8]'
                         </pre>
                         <p>rqt_plotを使用すると、トピックのデータをグラフにすることができます。（略）</p>
                     </div><!-- topic -->
