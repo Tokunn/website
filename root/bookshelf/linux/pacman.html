@@ -1,0 +1,114 @@
+<?php include_once($_SERVER['DOCUMENT_ROOT'].'/common/template/template.php') ?>
+<?php set_head('pacmanの使い方', __FILE__); ?>
+
+<div id="pageBodyMain">
+    <article>
+        <header class="articleDetailHead">
+            <h1 class="pageTitle">pacmanの使い方</h1>
+        </header>
+
+        <section class="articleDetailBody" id="body">
+
+            <div id="objective">
+                <h2 class="heading-typeA">目的</h2>
+                <p>ArchLinuxのパッケージ管理マネージャーpacmanの使い方メモです。</p>
+            </div><!-- objective -->
+
+            <div id="provide">
+                <h2 class="heading-typeA">準備</h2>
+                <p>まずは下記のものを用意してください</p>
+                <ol>
+                    <li>ArchLinuxマシン</li>
+                </ol>
+            </div><!-- provide -->
+
+            <div id="install">
+                <h2 class="heading-typeA">インストール</h2>
+                <p>パッケージのインストール</p>
+                <pre class="brush: bash;">
+                    $ sudo pacman -S パッケージ名
+                </pre>
+            </div><!-- install -->
+
+            <div id="remove">
+                <h2 class="heading-typeA">削除</h2>
+                <p>パッケージのアンインストール</p>
+                <pre class="brush: bash;">
+                    $ sudo pacman -Rns パッケージ名
+                </pre>
+                <p>孤立パッケージのアンインストール</p>
+                <pre class="brush: bash;">
+                    $ sudo pacman -Rsn $(pacman -Qtdq)
+                </pre>
+            </div><!-- remove -->
+
+            <div id="update">
+                <h2 class="heading-typeA">アップデート</h2>
+                <p>データベースの更新</p>
+                <pre class="brush: bash;">
+                    $ sudo pacman -Sy
+                </pre>
+                <p>アップデート</p>
+                <pre class="brush: bash;">
+                    $ sudo pacman -Syu
+                </pre>
+            </div><!-- update -->
+
+            <div id="find">
+                <h2 class="heading-typeA">検索</h2>
+                <p>パッケージの検索</p>
+                <pre class="brush: bash;">
+                    $ sudo pacman -Ss パッケージ名
+                </pre>
+                <p>インストール済みパッケージの検索</p>
+                <pre class="brush: bash;">
+                    $ sudo pacman -Qs パッケージ名
+                </pre>
+            </div><!-- find -->
+
+            <div id="print">
+                <h2 class="heading-typeA">インストール済みパッケージ</h2>
+                <p>インストール済みパッケージの表示</p>
+                <pre class="brush: bash;">
+                    $ sudo pacman -Qqe
+                </pre>
+            </div><!-- print -->
+
+            <div id="conclusion">
+                <h2 class="heading-typeA">おわりに</h2>
+                <p>いかがでしたでしょうか。
+                わからないことなどがありましたら、ご質問だくさい。</p>
+                <p>2015/7/28</p>
+            </div><!-- conclusion -->
+
+        </section><!-- body -->
+
+        <footer class="articleDetailFoot">
+            <section id="body">
+                <h2 class="heading-typeC">参考サイト</h2>
+                <ul>
+                    <li><a href="http://lnxmemo.blogspot.jp/2009/11/pacman_14.html">
+                            pacmanのいろいろ</a></li>
+                </ul>
+            </section><!-- body -->
+        </footer>
+    </article>
+</div><!-- pageBodyMain -->
+
+<div id="pageBodySub">
+    <nav class="localNavi">
+        <dl>
+            <dt>目次</dt>
+            <dd><a href="#objective">目的</a></dd>
+            <dd><a href="#provide">準備</a></dd>
+            <dd><a href="#install">インストール</a></dd>
+            <dd><a href="#remove">削除</a></dd>
+            <dd><a href="#update">アップデート</a></dd>
+            <dd><a href="#find">検索</a></dd>
+            <dd><a href="#print">表示</a></dd>
+            <dd><a href="#conclusion">終わりに</a></li>
+        </dl>
+    </nav>
+</div><!-- pageBodySub -->
+
+<?php set_foot(); ?>
