@@ -1,0 +1,155 @@
+<?php include_once($_SERVER['DOCUMENT_ROOT'].'/common/template/template.php') ?>
+<?php set_head('ROSチュートリアル3', __FILE__); ?>
+
+<div id="pageBodyMain">
+    <article>
+        <header class="articleDetailHead">
+            <h1 class="pageTitle">ROSチュートリアル3</h1>
+        </header>
+
+        <section class="articleDetailBody" id="body">
+
+            <div id="objective">
+                <h2 class="heading-typeA">目的</h2>
+                <p><a href="02_ros_tutorials2.html">前回</a>に続き<a href="http://wiki.ros.org/ja/ROS/Tutorials">wikiのチュートリアル</a>をやっていきます。</p>
+                <p>今回はメッセージについてです。ROSではトピックとサービスを使った通信方法があります。</p>
+                <p>このトピックのデータ型をメッセージと呼びます。</p>
+            </div><!-- objective -->
+
+            <div id="usemessage">
+                <h2 class="heading-typeA">messageを使う</h2>
+                <p>メッセージファイルはROSメッセージの型を説明する単純なテキストファイルです。
+                これはメッセージのソースコードを異なる言語で作成するのに使います。</p>
+                <p>msgディレクトリに保管されています。</p>
+                <p>メッセージは１行ごとに型と名前が記載されているテキストファイルです。</p>
+                <p>型には下記のようなものが使用できます。</p>
+                <ul>
+                    <li>int8, int16, int32, int64 (plus uint*)</li>
+                    <li>float32, float64</li>
+                    <li>string</li>
+                    <li>time, duration</li>
+                    <li>variable-length array[] and fixed-length array[C]</li>
+                    <li>Header</li>
+                </ul>
+
+                <div id="definemsg">
+                    <h3 class="heading-typeB">メッセージの定義</h3>
+                    <p>メッセージを定義してみましょう。</p>
+                    <pre class="brush: bash;">
+                        $ cd ~/catkin_ws/src/beginner_tutorials
+                        $ mkdir msg
+                        $ echo "int64 num" > msg/Num.msg
+                    </pre>
+                </div><!-- definemsg -->
+
+                <div id="editpackage">
+                    <h3 class="heading-typeB">package.xmlの編集</h3>
+                    <p>次にpackage.xmlを編集します。</p>
+                    <p>下記の２行のコメントアウトを外してください。</p>
+                    <pre class="brush: bash;">
+                        <build_depend>message_generation</build_depend>
+                        <run_depend>message_runtime</run_depend>
+                    </pre>
+                </div><!-- editpackage -->
+
+                <div id="editcmake">
+                    <h3 class="heading-typeB">CMakeLists.txtの編集</h3>
+                    <p>次にCMakeLists.txtを編集します。</p>
+                    <p>まずは、CMakeLists.txtから下記の行を見つけてください。</p>
+                    <p>下記のようになるように、コメントアウトを外して、追記してください。</p>
+                    <pre class="brush: bash;">
+                        find_package(catkin REQUIRED COMPONENTS
+                            roscpp
+                            rospy
+                            std_msgs
+                            message_generation
+                        )
+                    </pre>
+                    <p>実行時依存も有効になることをチェックします。</p>
+                    <p>同様に下記の行を見つけて有効になっていることをチェックしてください。<p>
+                    <pre class="brush: bash;">
+                        catkin_package (
+                            ...
+                            CATKIN_DEPENDS message_runtime ...
+                            ... )
+                    </pre>
+                    <p>次にメッセージファイルを追加します。</p>
+                    <p>同様にして、CMakeLists.txtから下記の行を見つけて、同じになるように編集してください。</p>
+                    <pre class="brush: bash;">
+                        add_message_files(
+                            FILES
+                            Num.msg
+                        )
+                    </pre>
+                    <p>さらに、同様にしてメッセージ生成generate_messages()の呼び出しも有効にします。</p>
+                    <pre class="brush: bash;">
+                        generate_messages(
+                            DEPENDENCIES
+                            std_msgs
+                        )
+                    </pre>
+                </div><!-- editcmake -->
+            </div><!-- usemessage -->
+
+            <div id="make">
+                <h2 class="heading-typeA">make</h2>
+                <p>makeします</p>
+                <pre class="brush: bash;">
+                    $ cd ../..
+                    $ catkin_make
+                    $ cd -
+                </pre>
+            </div><!-- make -->
+
+            <div id="rosmsg">
+                <h2 class="heading-typeA">rosmsg</h2>
+                <p>rosmsgを使ってメッセージを確認することができます。</p>
+                <pre class="brush: bash;">
+                    $ rosmsg show beginner_tutorials/Num
+                    $ rosmsg show Num
+                </pre>
+            </div><!-- rosmsg -->
+
+            <div id="conclusion">
+                <h2 class="heading-typeA">おわりに</h2>
+                <p>いかがでしたでしょうか。
+                わからないことなどがありましたら、ご質問だくさい。</p>
+                <p>2015/7/28</p>
+            </div><!-- conclusion -->
+
+        </section><!-- body -->
+
+        <footer class="articleDetailFoot">
+            <section id="body">
+                <h2 class="heading-typeC">参考サイト</h2>
+                <ul>
+                    <a href="http://wiki.ros.org/ja/ROS/Tutorials/UsingRqtconsoleRoslaunch">
+                        UsingRqtconsoleRoslaunch
+                    </a>
+                </ul>
+            </section><!-- body -->
+        </footer>
+    </article>
+</div><!-- pageBodyMain -->
+
+<div id="pageBodySub">
+    <nav class="localNavi">
+        <dl>
+            <dt>目次</dt>
+            <dd><a href="#objective">目的</a></dd>
+            <dd>
+                <a href="#usemessage">messageを使う</a>
+                <ol>
+                    <li><a href="#definemsg">メッセージの定義</a></li>
+                    <li><a href="#editpackage">package.xmlの編集</a></li>
+                    <li><a href="#editcmake">CMakeLists.txtの編集</a></li>
+                </ol>
+            </dd>
+            <dd><a href="#make">make</a></dd>
+            <dd><a href="#rosmsg">rosmsg</a></dd>
+            <dd><a href="#conclusion">終わりに</a></li>
+        </dl>
+    </nav>
+</div><!-- pageBodySub -->
+
+<?php set_foot(); ?>

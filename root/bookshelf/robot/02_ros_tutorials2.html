@@ -1,0 +1,93 @@
+<?php include_once($_SERVER['DOCUMENT_ROOT'].'/common/template/template.php') ?>
+<?php set_head('ROSチュートリアル2', __FILE__); ?>
+
+<div id="pageBodyMain">
+    <article>
+        <header class="articleDetailHead">
+            <h1 class="pageTitle">ROSチュートリアル2</h1>
+        </header>
+
+        <section class="articleDetailBody" id="body">
+
+            <div id="objective">
+                <h2 class="heading-typeA">目的</h2>
+                <p><a href="01_ros_tutorials.html">前回</a>に続き<a href="http://wiki.ros.org/ja/ROS/Tutorials">wikiのチュートリアル</a>をやっていきます。</p>
+            </div><!-- objective -->
+
+            <div id="roslaunch">
+                <h2 class="heading-typeA">roslaunch</h2>
+                <p>roslaunchを使用すると、lanchファイルで定義したノードを一度に起動することができます。</p>
+                <pre class="brush: bash;">
+                    $ source ~/catkin_ws/devel/setup.bash
+                    $ roscd beginner_tutorials
+                    $ mkdir launch
+                    $ cd launch
+                </pre>
+                <div id="launchfile">
+                    <h3 class="heading-typeB">launchファイル</h3>
+                    <p>下記の内容のturtlemimic.launchファイルを作成してください。</p>
+                    <pre class="brush: bash;">
+                        <launch>
+                            <group ns="turtlesim1">
+                                <node pkg="turtlesim" name="sim" type="turtlesim_node"/>
+                            </group>
+                            <group ns="turtlesim2">
+                                <node pkg="turtlesim" name="sim" type="turtlesim_node"/>
+                            </group>
+                            <node pkg="turtlesim" name="mimic" type="mimic">
+                                <remap from="input" to="turtlesim1/turtle1"/>
+                                <remap from="input" to="turtlesim2/turtle2"/>
+                            </node>
+                        </launch>
+                    </pre>
+                    <p>groupでは、turtlesim1,2という名前スペースを持った２つのグループをsimという名前のturtlesimノードで起動します。</p>
+                    <p>nodeでは、turtlesim2がturtlesim1を模倣するmimicノードを起動します。</p>
+                </div><!-- launchfile -->
+                <div id="roslaunch">
+                    <h3 class="heading-typeB">roslaunch</h3>
+                    <p>launchファイルをroslaunchから使ってみます。</p>
+                    <pre class="brush: bash;">
+                        $ roslaunch begginer_tutorials turtlemimic.launch
+                    </pre>
+                    <p>別のターミナルからturtle1にtopicを送ってみます。</p>
+                    <pre class="brush: bash;">
+                        $ rostopic pub /turtlesim1/turtle1/cmd_vel geometry_msgs/Twist -r 1 -- '[2.0, 0.0, 0.0]' '[0.0, 0.0, -1.8]'
+                    </pre>
+                    <p>turtle1にのみtopicを送りましたが、turtle2まで動きます。</p>
+                </div><!-- startlaunch -->
+            </div><!-- launch -->
+
+            <div id="conclusion">
+                <h2 class="heading-typeA">おわりに</h2>
+                <p>いかがでしたでしょうか。
+                わからないことなどがありましたら、ご質問だくさい。</p>
+                <p>2015/7/28</p>
+            </div><!-- conclusion -->
+
+        </section><!-- body -->
+
+        <footer class="articleDetailFoot">
+            <section id="body">
+                <h2 class="heading-typeC">参考サイト</h2>
+                <ul>
+                    <a href="http://wiki.ros.org/ja/ROS/Tutorials/UsingRqtconsoleRoslaunch">
+                        UsingRqtconsoleRoslaunch
+                    </a>
+                </ul>
+            </section><!-- body -->
+        </footer>
+    </article>
+</div><!-- pageBodyMain -->
+
+<div id="pageBodySub">
+    <nav class="localNavi">
+        <dl>
+            <dt>目次</dt>
+            <dd><a href="#objective">目的</a></dd>
+            <dd><a href="#roslaunch">roslaunch</a></dd>
+            <dd><a href="#conclusion">終わりに</a></li>
+        </dl>
+    </nav>
+</div><!-- pageBodySub -->
+
+<?php set_foot(); ?>
