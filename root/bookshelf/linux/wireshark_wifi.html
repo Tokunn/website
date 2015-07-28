@@ -1,0 +1,157 @@
+<?php include_once($_SERVER['DOCUMENT_ROOT'].'/common/template/template.php') ?>
+<?php set_head('Wiresharkを用いたWi-fiスキャン ', __FILE__); ?>
+
+<div id="pageBodyMain">
+    <article>
+        <header class="articleDetailHead">
+            <h1 class="pageTitle">Wiresharkを用いたWi-fiスキャン</h1>
+        </header>
+
+        <section class="articleDetailBody" id="body">
+
+            <div id="objective">
+                <h2 class="heading-typeA">目的</h2>
+                <p>パケットキャプチャツールであるWiresharkを用いて、無線LANを流れるパケットをキャプチャします。</p>
+            </div><!-- objective -->
+
+            <div id="provide">
+                <h2 class="heading-typeA">準備</h2>
+                <p>まずは下記のものを用意してください</p>
+                <ol>
+                    <li>無線LANに接続可能なLinuxマシン</li>
+                </ol>
+            </div><!-- provide -->
+
+            <div id="install">
+                <h2 class="heading-typeA">インストール</h2>
+                <div id="ubuntu">
+                    <h3 class="heading-typeB">Ubuntu</h3>
+                    <pre class="brush: bash;">
+                        $ sudo apt-get install wireshark
+                    </pre>
+                </div><!-- ubuntu -->
+                <div id="arch">
+                    <h3 class="heading-typeB">ArchLinux</h3>
+                    <pre class="brush: bash;">
+                        $ sudo pacman -Sy wireshark
+                    </pre>
+                </div><!-- arch -->
+            </div><!-- install -->
+
+            <div id="configuration">
+                <h2 class="heading-typeA">設定</h2>
+                <p>まずは、インターフェースの設定を行います。</p>
+                <p>無線LANカードには次のようなモードがあります。</p>
+                <ul>
+                    <li>マネージモード：普段最も使う、アクセスポイントへ接続するモード</li>
+                    <li>アドホックモード：アクセスポイントを介さず端末同士で直接接続するモード
+                        最近ではゲーム機の通信などに用いられる</li>
+                    <li>マスターモード：テザリングなど、自分がアクセスポイントとなり、クライアントを接続させて通信するモード</li>
+                    <li>モニターモード：今回使う、自分はデータの送信は行わず、ただ飛び交うパケットを受信し続けるモード</li>
+                </ul>
+                <p>これらからわかるように普段は無線LANカードはマネージモードになっています。
+                このままでは、飛び交うパケットのキャプチャができないのでモニターモードに設定します。</p>
+                <p>iwconfigで確認してみましょう。</p>
+                <pre class="brush: bash;">
+                    $ iwconfig
+                </pre>
+                <p>wlan0やlwp2s0などで表されるのが無線LANカードです。
+                Mode:のうしろにManagedと書いてある場合はマネージモードになっています。</p>
+                <div id="settings">
+                    <h3 class="heading-typeB">設定</h3>
+                    <p>まずは、普段は無線LANカードは有効になっています。
+                    設定を行うためにip linkを使ってdownにさせます。</p>
+                    <p>wlp2s0はiwconfigで確認したデバイス名に各自置き換えてください。</p>
+                    <pre class="brush: bash;">
+                        # Ubuntuの場合
+                        $ sudo iwconfig wlp2s0 down
+                        # ArchLinuxの場合
+                        $ sudo ip link set down wlp2s0
+                    </pre>
+                    <p>この操作を行わないと、下記のように怒られます。</p>
+                    <pre class="brush: bash;">
+                        Error for wireless request "Set Mode" (8B06) :
+                            SET failed on device wlp2s0 : Device or resource busy.
+                    </pre>
+                    <p>ip linkでdownにさせたため、ifconfigで確認すると、wlp2s0（または任意のデバイス名）は見えなくなっています。</p>
+                    <pre class="brush: bash;">
+                        $ ifconfig
+                    </pre>
+                    <p>さて、これで設定を行うことができるようになりました。</p>
+                    <p>無線LANカードのモードをモニターモードに設定します。</p>
+                    <pre class="brush: bash;">
+                        $ sudo iwconfig wlp2s0 mode monitor
+                    </pre>
+                    <p>これでモードがモニターモードに設定されました。
+                    iwconfigで確認してみましょう。</p>
+                    <pre class="brush: bash;">
+                        $ iwconfig
+                    </pre>
+                    <p>Mode:Monitorとなっていると思います。
+                    Managedに戻す場合は、monitorの部分をmanagedに変えてください。</p>
+                    <p>次にさきほど、ip linkでdownにしたインターフェースをupにします。
+                    これによってifconfigでも確認できるようになり、インターフェースが使えるように。</p>
+                    <pre class="brush: bash;">
+                        # Ubuntuの場合
+                        $ sudo iwconfig wlp2s0 up
+                        # ArchLinuxの場合
+                        $ sudo ip link set up wlp2s0
+                        # 次にどちらの場合も
+                        $ ifconfig
+                    </pre>
+                    <p>これで設定は完了です。</p>
+                    <p>もし、ビーコンパケットを読んでカレントチャンネルを得た場合は、チャンネルを変える必要が出てくるかもしれません。
+                    チャンネルを変える場合は下記のように実行してください。</p>
+                    <p>この場合はチャンネルを8に変えてください。</p>
+                    <pre class="brush: bash;">
+                        $ sudo iwconfig wlp2s0 channel 8
+                    </pre>
+                </div><!-- settings -->
+
+            </div><!-- configuration -->
+
+            <div id="capture">
+                <h2 class="heading-typeA">キャプチャ</h3>
+                <p>設定を完了させたので、いよいよキャプチャを行います。</p>
+                <p>wiresharkを起動してください。</p>
+                <pre class="brush: bash;">
+                    $ sudo wireshark
+                </pre>
+                <p>ここからはいつもどおりのパケットキャプチャです。
+                wiresharkの説明を見ながらインターフェースをwlp2s0など無線LANカードに設定して、キャプチャを行ってください。</p>
+            </div><!-- capture -->
+
+            <div id="conclusion">
+                <h2 class="heading-typeA">おわりに</h2>
+                <p>いかがでしたでしょうか。
+                わからないことなどがありましたら、ご質問だくさい。</p>
+                <p>2015/7/28</p>
+            </div><!-- conclusion -->
+
+        </section><!-- body -->
+
+        <footer class="articleDetailFoot">
+            <section id="body">
+                <h2 class="heading-typeC">参考サイト</h2>
+                <ul>
+                </ul>
+            </section><!-- body -->
+        </footer>
+    </article>
+</div><!-- pageBodyMain -->
+
+<div id="pageBodySub">
+    <nav class="localNavi">
+        <dl>
+            <dt>目次</dt>
+            <dd><a href="#objective">目的</a></dd>
+            <dd><a href="#provide">準備</a></dd>
+            <dd><a href="#install">インストール</a></dd>
+            <dd><a href="#configuration">設定</a></dd>
+            <dd><a href="#capture">キャプチャ</a></dd>
+            <dd><a href="#conclusion">終わりに</a></li>
+        </dl>
+    </nav>
+</div><!-- pageBodySub -->
+
+<?php set_foot(); ?>

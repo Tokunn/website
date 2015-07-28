@@ -1,0 +1,112 @@
+<?php include_once($_SERVER['DOCUMENT_ROOT'].'/common/template/template.php') ?>
+<?php set_head('nmapの使い方', __FILE__); ?>
+
+<div id="pageBodyMain">
+    <article>
+        <header class="articleDetailHead">
+            <h1 class="pageTitle">nmapの使い方</h1>
+        </header>
+
+        <section class="articleDetailBody" id="body">
+
+            <div id="objective">
+                <h2 class="heading-typeA">目的</h2>
+                <p>便利なポーツスキャニングツールnmapの使い方を、必要に応じて追記しながら解説します。</p>
+            </div><!-- objective -->
+
+            <div id="provide">
+                <h2 class="heading-typeA">準備</h2>
+                <p>まずは下記のものを用意してください</p>
+                <ol>
+                    <li>Linuxマシン</li>
+                </ol>
+            </div><!-- provide -->
+
+            <div id="install">
+                <h2 class="heading-typeA">インストール</h2>
+                <div id="ubuntu">
+                    <h3 class="heading-typeB">Ubuntu</h3>
+                    <pre class="brush: bash;">
+                        $ sudo apt-get install nmap
+                    </pre>
+                </div><!-- ubuntu -->
+
+                <div id="arch">
+                    <h3 class="heading-typeB">ArchLinux</h3>
+                    <pre class="brush: bash;">
+                        $ sudo pacman -Sy nmap
+                    </pre>
+                </div><!-- arch -->
+            </div><!-- install -->
+
+            <div id="use">
+                <h2 class="heading-typeA">使い方</h2>
+                <div id="ping">
+                    <h3 class="heading-typeB">pingスキャン</h3>
+                    <p>pingを使ってネットワーク上のホストをスキャンします。</p>
+                    <p>192.168.1.1から192.168.1.255までスキャンをしてみます。</p>
+                    <pre class="brush: bash;">
+                        $ nmap -sP 192.168.1.1-255
+                    </pre>
+                </div><!-- ping -->
+                <div id="ssh">
+                    <h3 class="heading-typeB">sshスキャン</h3>
+                    <p>sshが使用する22番ポートにパケットを送り、sshが起動しているかどうかをスキャンします。</p>
+                    <p>これにより、ネットワーク上に存在するraspberrypiやbeagleboneblackのIPアドレスを推測することができます。</p>
+                    <pre class="brush: bash;">
+                        $ nmap -p22 192.168.1.1-255
+                    </pre>
+                    <p>開いているIPアドレスのみを表示する場合はgrepに流し込んでopenの文字を探します。</p>
+                    <pre class="brush: bash;">
+                        $ nmap -p22 192.168.1.1-255 | grep -i -n -B3 open
+                    </pre>
+                </div><!-- ssh -->
+
+                <div id="os">
+                    <h3 class="heading-typeB">OSスキャン</h3>
+                    <p>-OオプションでOSの推定をすることができます。</p>
+                    <pre class="brush: bash;">
+                        $ sudo nmap -O 192.168.1.1-255
+                    </pre>
+                </div><!-- os -->
+            </div><!-- use -->
+
+            <div id="conclusion">
+                <h2 class="heading-typeA">おわりに</h2>
+                <p>いかがでしたでしょうか。
+                わからないことなどがありましたら、ご質問だくさい。</p>
+                <p>2015/7/28</p>
+            </div><!-- conclusion -->
+
+        </section><!-- body -->
+
+        <footer class="articleDetailFoot">
+            <section id="body">
+                <h2 class="heading-typeC">参考サイト</h2>
+                <ul>
+                </ul>
+            </section><!-- body -->
+        </footer>
+    </article>
+</div><!-- pageBodyMain -->
+
+<div id="pageBodySub">
+    <nav class="localNavi">
+        <dl>
+            <dt>目次</dt>
+            <dd><a href="#objective">目的</a></dd>
+            <dd><a href="#provide">準備</a></dd>
+            <dd><a href="#use">使い方</a></dd>
+            <dd>
+                <ol>
+                    <li><a href="#ping">pingスキャン</a></li>
+                    <li><a href="#ssh">sshスキャン</a></li>
+                    <li><a href="#os">osスキャン</a></li>
+                </ol>
+            </dd>
+            <dd><a href="#conclusion">終わりに</a></li>
+        </dl>
+    </nav>
+</div><!-- pageBodySub -->
+
+<?php set_foot(); ?>
