@@ -1,0 +1,89 @@
+<?php include_once($_SERVER['DOCUMENT_ROOT'].'/common/template/template.php') ?>
+<?php set_head('Makefileの書き方2', __FILE__); ?>
+
+<div id="pageBodyMain">
+    <article>
+        <header class="articleDetailHead">
+            <h1 class="pageTitle">Makefileの書き方２</h1>
+        </header>
+
+        <section class="articleDetailBody" id="body">
+
+            <div id="objective">
+                <h2 class="heading-typeA">目的</h2>
+                <p><a href="writemakefile.html">Makefileの書き方</a>に続いて、もっと簡単なMakefileを書きます。</p>
+            </div><!-- objective -->
+
+            <div id="provide">
+                <h2 class="heading-typeA">準備</h2>
+                <p>まずは下記のものを用意してください</p>
+                <ol>
+                    <li>Linuxマシン</li>
+                </ol>
+            </div><!-- provide -->
+
+            <div id="make">
+                <h2 class="heading-typeA">make</h2>
+                <div id="Makefile">
+                    <h3 class="heading-typeB">Makefile</h3>
+                    <p>ファイルは<a href="makefile">こちら</a>。</p>
+                    <pre class="brush: bash;">
+                        CC       = gcc
+                        CCFLAGS  = -Wall -Wextra -O2 -g
+                        SOURCES := $(wildcard *.c)
+                        TARGET   = $(SOURCES:.c=.bin)
+
+                        all: $(TARGET)
+
+                        %.bin:%.c
+                            $(CC) $(CCFLAGS) $< -o $@
+
+                         clean:
+                            $(RM) -r *.bin
+                    </pre>
+                    <p>wgetを使って保存してください。</p>
+                    <pre class="brush: bash;">
+                        $ wget http://tokun.net/bookshelf/program/makefile
+                    </pre>
+                    <p>これでmakeをすると、.cの拡張子を持つファイルはコンパイルされて、元のファイル名.binという実行ファイルが生成されます。</p>
+                    <p>C++のMakefileを作りたい場合は、CCをg++に、SOURCESとTARGETの.cを.cppに変更してください。</p>
+                </div><!-- makefile -->
+            </div><!-- make -->
+
+            <div id="conclusion">
+                <h2 class="heading-typeA">おわりに</h2>
+                <p>いかがでしたでしょうか。
+                わからないことなどがありましたら、ご質問だくさい。</p>
+                <p>2015/7/28</p>
+            </div><!-- conclusion -->
+
+        </section><!-- body -->
+
+        <footer class="articleDetailFoot">
+            <section id="body">
+                <h2 class="heading-typeC">参考サイト</h2>
+                <ul>
+                </ul>
+            </section><!-- body -->
+        </footer>
+    </article>
+</div><!-- pageBodyMain -->
+
+<div id="pageBodySub">
+    <nav class="localNavi">
+        <dl>
+            <dt>目次</dt>
+            <dd><a href="#objective">目的</a></dd>
+            <dd><a href="#provide">準備</a></dd>
+            <dd><a href="#make">make</a></dd>
+            <dd>
+                <ol>
+                    <li><a href="#Makefile">Makefile</a></li>
+                </ol>
+            </dd>
+            <dd><a href="#conclusion">終わりに</a></li>
+        </dl>
+    </nav>
+</div><!-- pageBodySub -->
+
+<?php set_foot(); ?>
