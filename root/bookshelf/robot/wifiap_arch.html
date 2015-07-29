@@ -1,0 +1,105 @@
+<?php include_once($_SERVER['DOCUMENT_ROOT'].'/common/template/template.php') ?>
+<?php set_head('ArchLinuxでwi-fiアクセスポイント作成', __FILE__); ?>
+
+<div id="pageBodyMain">
+    <article>
+        <header class="articleDetailHead">
+            <h1 class="pageTitle">ArchLinuxでwi-fiアクセスポイント作成</h1>
+        </header>
+
+        <section class="articleDetailBody" id="body">
+
+            <div id="objective">
+                <h2 class="heading-typeA">目的</h2>
+                <p>ArchLinuxをインストールしたRaspberryPi・BeagleBoneBlackをwi-fiのアクセスポイントにして、他の機器を接続させます。</p>
+            </div><!-- objective -->
+
+            <div id="provide">
+                <h2 class="heading-typeA">準備</h2>
+                <p>まずは下記のものを用意してください</p>
+                <ol>
+                    <li>BeagleBoneBlack or RaspberryPi</li>
+                    <li>無線LAN USBアダプタ</li>
+                </ol>
+                <p>起動して、ログインしておいてください。</p>
+            </div><!-- provide -->
+
+            <div id="hostapd">
+                <h2 class="heading-typeA">hostapdのインストール・設定</h2>
+                <p>ここからは、マイコンボードでの作業になります。</p>
+                <div id="install">
+                    <h3 class="heading-typeB">インストール</h3>
+                    <pre class="brush: bash;">
+                        # Ubuntuの場合
+                        $ sudo apt-get install hostapd
+                        # ArchLinuxの場合
+                        $ sudo pacman -Sy hostapd
+                    </pre>
+                </div><!-- install -->
+
+                <div id="config">
+                    <h3 class="heading-typeB">設定</h3>
+                    <p>下記の内容で/etc/hostapd/hostapd.confとしてcurlで保存します。</p>
+                    <pre class="brush: bash;">
+                        interface=wlan0
+                        ssid=arch_ap
+                        hw_mode=g
+                        channel=3
+                        wpa=2
+                        wpa_passphrase=temppwd
+                        wpa_key_mgmt=WPA-PSK
+                        rsn_pairwise=CCMP
+                    </pre>
+                    <pre class="brush: bash;">
+                        $ curl -O http://tokun.net/bookshelf/robot/hostapd.conf
+                        $ cp hostapd.conf /etc/hostapd/
+                    </pre>
+                    <p>次に設定ファイルの場所を記述します。</p>
+                    <p>/etc/default/hostapdの10行目のDEAMON_CONFのコメントアウトを外して、下記のように記述してください。</p>
+                    <pre class="brush: bash;">
+                        DAEMON_CONF="/etc/hostapd/hostapd.conf"
+                    </pre>
+                    <p>以上で設定は完了です。</p>
+                </div><!-- config -->
+            </div><!-- hostapd -->
+
+            <div id="conclusion">
+                <h2 class="heading-typeA">おわりに</h2>
+                <p>いかがでしたでしょうか。
+                わからないことなどがありましたら、ご質問だくさい。</p>
+                <p>2015/7/29</p>
+            </div><!-- conclusion -->
+
+        </section><!-- body -->
+
+        <footer class="articleDetailFoot">
+            <section id="body">
+                <h2 class="heading-typeC">参考サイト</h2>
+                <ul>
+                    <li><a href="http://hyottokoaloha.hatenablog.com/entry/2015/02/24/000655">
+                            Raspberry Piの無線LANアクセスポイント化</a></li>
+                </ul>
+            </section><!-- body -->
+        </footer>
+    </article>
+</div><!-- pageBodyMain -->
+
+<div id="pageBodySub">
+    <nav class="localNavi">
+        <dl>
+            <dt>目次</dt>
+            <dd><a href="#objective">目的</a></dd>
+            <dd><a href="#provide">準備</a></dd>
+            <dd><a href="#hostapd">hostapd</a></dd>
+            <dd>
+                <ol>
+                    <li><a href="#install">インストール</a></li>
+                    <li><a href="#config">設定</a></li>
+                </ol>
+            </dd>
+            <dd><a href="#conclusion">終わりに</a></li>
+        </dl>
+    </nav>
+</div><!-- pageBodySub -->
+
+<?php set_foot(); ?>

@@ -1,0 +1,103 @@
+<?php include_once($_SERVER['DOCUMENT_ROOT'].'/common/template/template.php') ?>
+<?php set_head('DebianをBeagleBoneへインストール', __FILE__); ?>
+
+<div id="pageBodyMain">
+    <article>
+        <header class="articleDetailHead">
+            <h1 class="pageTitle">DebianをBeagleBoneへインストール</h1>
+        </header>
+
+        <section class="articleDetailBody" id="body">
+
+            <div id="objective">
+                <h2 class="heading-typeA">目的</h2>
+                <p>今回は、BeagleBoneBlackにDebian Wheezyをインストールします。</p>
+                <p>組み込み用途のため、lxde版ではなくconsole版をインストールします。</p>
+            </div><!-- objective -->
+
+            <div id="provide">
+                <h2 class="heading-typeA">準備</h2>
+                <p>まずは下記のものを用意してください</p>
+                <ol>
+                    <li>BeagleBoneBlack Rev C</li>
+                    <li>mincro SDカード</li>
+                    <li>Linuxマシン</li>
+                </ol>
+            </div><!-- provide -->
+
+            <div id="sd">
+                <h2 class="heading-typeA">SDカードの準備</h2>
+                <p>ここからはLinuxマシンでの作業になります。</p>
+                <div id="downloadimage">
+                    <h3 class="heading-typeB">イメージファイルのダウンロード</h3>
+                    <p>ビルドされたイメージファイルをダウンロードしてきます。</p>
+                    <pre class="brush: bash;">
+                        $ wget https://rcn-ee.com/rootfs/bb.org/release/2015-03-01/console/bone-debian-7.8-console-armhf-2015-03-01-2gb.img.xz
+                    </pre>
+                    <p>md5sumはmd5sum: 10823cb21e6fc4536ff87605dc50ea6eです。必要に応じてチェックしてください。</p>
+                </div><!-- downloadimage -->
+                <div id="expansion">
+                    <h3 class="heading-typeB">展開</h3>
+                    <p>ダウンロードしたイメージファイルを展開します。</p>
+                    <pre class="brush: bash;">
+                        $ unxz bone-debian-7.8-console-armhf-2015-03-01-2gb.img.xz
+                    </pre>
+                </div><!-- expansion -->
+                <div id="write">
+                    <h3 class="heading-typeB">書き込み</h3>
+                    <p>パソコンにSDカードを接続してください。</p>
+                    <p>イメージファイルを書き込むために、まずはSDカードのデバイス名をチェックします。</p>
+                    <pre class="brush: bash;">
+                        $ lsblk
+                    </pre>
+                    <p>ここで、デバイス名をチェックします。デバイス名を間違るとOSが飛びますご注意ください。</p>
+                    <p>私の環境では、/dev/mmcblk0として認識されました。</p>
+                    <p>わからない場合は、SDカードを抜いた状態で実行・指した状態で実行して比較してみてください。</p>
+                    <p>次に、調べたデバイス名を使用してSDカードにイメージファイルを書き込みます。</p>
+                    <p>私は/dev/mmcblk0ですが、各自正しいデバイス名に置き換えてください。</p>
+                    <pre class="brush: bash;">
+                        $ sudo dd bs=1M if=bone-debian-7.8-console-armhf-2015-03-01-2gb.img of=/dev/your_devicename
+                        # 私の場合は
+                        $ sudo dd bs=1M if=bone-debian-7.8-console-armhf-2015-03-01-2gb.img of=/dev/mmclkb0
+                    </pre>
+                </div><!-- write -->
+                <p>以上でSDカードの準備は完了です。</p>
+            </div><!-- sd -->
+
+            <div id="conclusion">
+                <h2 class="heading-typeA">おわりに</h2>
+                <p>いかがでしたでしょうか。
+                わからないことなどがありましたら、ご質問だくさい。</p>
+                <p>2015/7/29</p>
+            </div><!-- conclusion -->
+
+        </section><!-- body -->
+
+        <footer class="articleDetailFoot">
+            <section id="body">
+                <h2 class="heading-typeC">参考サイト</h2>
+                <ul>
+                </ul>
+            </section><!-- body -->
+        </footer>
+    </article>
+</div><!-- pageBodyMain -->
+
+<div id="pageBodySub">
+    <nav class="localNavi">
+        <dl>
+            <dt>目次</dt>
+            <dd><a href="#objective">目的</a></dd>
+            <dd><a href="#provide">準備</a></dd>
+            <dd><a href="#thema1">テーマ1</a></dd>
+            <dd>
+                <ol>
+                    <li><a href="#thema1-1">テーマ1-1</a></li>
+                </ol>
+            </dd>
+            <dd><a href="#conclusion">終わりに</a></li>
+        </dl>
+    </nav>
+</div><!-- pageBodySub -->
+
+<?php set_foot(); ?>

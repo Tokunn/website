@@ -1,0 +1,155 @@
+<?php include_once($_SERVER['DOCUMENT_ROOT'].'/common/template/template.php') ?>
+<?php set_head('ArchLinuxをBeagleBoneBlackへインストール ver.old', __FILE__); ?>
+
+<div id="pageBodyMain">
+    <article>
+        <header class="articleDetailHead">
+            <h1 class="pageTitle">ArchLinuxをBeagleBoneBlackへインストール ver.old</h1>
+        </header>
+
+        <section class="articleDetailBody" id="body">
+
+            <div id="objective">
+                <h2 class="heading-typeA">目的</h2>
+                <p>最新のBeagleBoneBlackにArchLinuxをインストールする方法ではうまく起動しない場合があるため、古い方法でインストールしてみます。</p>
+                <p>パッケージの再配布はできるかどうかわからないため、パッケージ2つをすでに持っている前提で進めます。</p>
+            </div><!-- objective -->
+
+            <div id="provide">
+                <h2 class="heading-typeA">準備</h2>
+                <p>まずは下記のものを用意してください</p>
+                <ol>
+                    <li>BeagleBoneBlack (Rev C)</li>
+                    <li>マイクロSDカード</li>
+                    <li>LANケーブル</li>
+                    <li>MiniUSB-B to USB-A ケーブル</li>
+                    <li>マイクロSDカードへ書き込みができるLinuxマシン(マイクロSDアダプターの使用も可)</li>
+                </ol>
+            </div><!-- provide -->
+
+            <div id="sd">
+                <h2 class="heading-typeA">SDカードの準備</h2>
+                <p>ここからはパソコンでの操作になります。</p>
+                <p>SDカードを接続しておいてください。</p>
+                <div id="partition">
+                    <h3 class="heading-typeB">パーティション分け</h3>
+                    <p>SDカードのパーティション分けをします。</p>
+                    <p><a href="http://localhost/bookshelf/robot/installingarchtobbb1.html#write">
+                        ArchLinuxをBeagleBoneBlackへインストール</a>を参考にしながら、デバイス名をチェックしてください。</p>
+                    <p>次にfdiskを使ってパーティション分けを行います。詳しい使い方は上記リンク先をご覧ください。</p>
+                    <p>パーティションは2つ作成します。
+                    bootパーティションとrootパーティションです。</p>
+                    <pre class="brush: bash;">
+                        $ sudo fdisk /dev/user_devicename
+                    </pre>
+                    <p>下記のように、順番に入力して1文字づつEnterを押してください。
+                    空行はEnterのみです。</p>
+                    <pre class="brush: bash;">
+                        o
+                        n
+                        p
+                        1
+
+                        +64M
+                        t
+                        e
+                        a
+                        n
+                        p
+                        2
+
+
+                        p
+                        w
+                    </pre>
+                </div><!-- partition -->
+                <div id="format">
+                    <h3 class="heading-typeB">パーティションのフォーマット</h3>
+                    <p>パーティション1をfat16、パーティション2をext4でフォーマットします。</p>
+                    <p>詳しくは<a href="http://localhost/bookshelf/robot/installingarchtobbb1.html#format">
+                        こちら</a>をご覧ください。</p>
+                    <pre class="brush: bash;">
+                        $ sudo mkfs.vfat -F 16 /dev/your_devicename1
+                        $ sudo mkfs.ext4 /dev/your_devicename2
+                    </pre>
+                </div><!-- format -->
+            </div><!-- sd -->
+
+            <div id="install">
+                <h2 class="heading-typeA">インストール</h2>
+                <div id="mount">
+                    <h3 class="heading-typeB">マウント</h3>
+                    <p>マウントします。</p>
+                    <pre class="brush: bash;">
+                        $ mkdir -p ~/Document/root ~/Document/boot
+                        $ cd ~/Document
+                        $ sudo mount /dev/your_devicename1 boot
+                        $ sudo mount /dev/your_devicename2 root
+                    </pre>
+                </div><!-- mount -->
+                <div id="expansion">
+                    <h3 class="heading-typeB">展開</h3>
+                    <p>ダウンロード済みの（今は公開されていない）ファイルをそれぞれ展開します。</p>
+                    <pre class="brush: bash;">
+                        $ sudo tar zxvf BeagleBone-bootloader.tar.gz -C boot
+                        $ sudo tar zxvf ArchLinuxARM-am33x-latest.tar.gz -C root
+                        $ sync
+                    </pre>
+                    <p>アンマウントして取り出します。</p>
+                    <pre class="brush: bash;">
+                        $ sudo umount boot
+                        $ sudo umount root
+                    </pre>
+                </div><!-- expansion -->
+            </div><!-- install -->
+
+            <p><a href="/bookshelf/robot/startarchbbb.html">BeagleBoneBlack(ArchLinux)の起動</a>へ続く</p>
+
+            <div id="conclusion">
+                <h2 class="heading-typeA">おわりに</h2>
+                <p>以上でインストールは完了です。SDカードをパソコンから取り外してください。
+                起動・設定については別の回で説明します。<br />
+                わからないことなどがありましたら、ご質問だくさい。</p>
+                <p>2015/7/29</p>
+            </div><!-- conclusion -->
+
+        </section><!-- body -->
+
+        <footer class="articleDetailFoot">
+            <section id="body">
+                <h2 class="heading-typeC">参考サイト</h2>
+                <ul>
+                    <li><a href="http://www.voip-info.jp/index.php/BeagleBone_Black_Asterisk">
+                        BeagleBone Black Asterisk</a></li>
+                </ul>
+            </section><!-- body -->
+        </footer>
+    </article>
+</div><!-- pageBodyMain -->
+
+<div id="pageBodySub">
+    <nav class="localNavi">
+        <dl>
+            <dt>目次</dt>
+            <dd><a href="#objective">目的</a></dd>
+            <dd><a href="#provide">準備</a></dd>
+            <dd><a href="#sd">SD</a></dd>
+            <dd>
+                <ol>
+                    <li><a href="#partition">パーティション</a></li>
+                    <li><a href="#format">フォーマット</a></li>
+                </ol>
+            </dd>
+            <dd><a href="#install">インストール</a></dd>
+            <dd>
+                <ol>
+                    <li><a href="#mount">マウント</a></li>
+                    <li><a href="#expansion">展開</a></li>
+                </ol>
+            </dd>
+            <dd><a href="#conclusion">終わりに</a></li>
+        </dl>
+    </nav>
+</div><!-- pageBodySub -->
+
+<?php set_foot(); ?>
