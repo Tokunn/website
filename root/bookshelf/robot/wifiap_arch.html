@@ -54,10 +54,9 @@
                         $ curl -O http://tokun.net/bookshelf/robot/hostapd.conf
                         $ cp hostapd.conf /etc/hostapd/
                     </pre>
-                    <p>次に設定ファイルの場所を記述します。</p>
-                    <p>/etc/default/hostapdの10行目のDEAMON_CONFのコメントアウトを外して、下記のように記述してください。</p>
+                    <p>次のようにして起動します。</p>
                     <pre class="brush: bash;">
-                        DAEMON_CONF="/etc/hostapd/hostapd.conf"
+                        $ hostapd /etc/hostapd/hostapd.conf
                     </pre>
                     <p>以上で設定は完了です。</p>
                 </div><!-- config -->
