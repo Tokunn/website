@@ -18,6 +18,8 @@ def main():
     # Add IP address
     cmd = "modprobe g_ether"
     call_system(cmd)
+    cmd = "ip link set eth0 up"
+    call_system(cmd)
     cmd = "ip link set usb0 up"
     call_system(cmd)
     cmd = "ip addr add 192.168.7.2/24 dev usb0"
