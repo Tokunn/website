@@ -27,7 +27,7 @@
             <div id="hostapd">
                 <h2 class="heading-typeA">hostapdのインストール・設定</h2>
                 <p>ここからは、マイコンボードでの作業になります。</p>
-                <div id="install">
+                <div id="install_hostapd">
                     <h3 class="heading-typeB">インストール</h3>
                     <pre class="brush: bash;">
                         # Ubuntuの場合
@@ -37,7 +37,7 @@
                     </pre>
                 </div><!-- install -->
 
-                <div id="config">
+                <div id="config_hostapd">
                     <h3 class="heading-typeB">設定</h3>
                     <p>下記の内容で/etc/hostapd/hostapd.confとしてcurlで保存します。</p>
                     <pre class="brush: bash;">
@@ -57,10 +57,41 @@
                     <p>次のようにして起動します。</p>
                     <pre class="brush: bash;">
                         $ hostapd /etc/hostapd/hostapd.conf
+                        $ systemctl enable hostapd
                     </pre>
                     <p>以上で設定は完了です。</p>
                 </div><!-- config -->
             </div><!-- hostapd -->
+
+            <div id="dhcpd">
+                <h2 class="heading-typeA">dhcpdのインストール・設定</h2>
+                <div id="install_dhcpd">
+                    <h3 class="heading-typeB">インストール</h3>
+                    <pre class="brush: bash;">
+                        $ sudo pacman -Sy extra/dhcp
+                    </pre>
+                </div><!-- install -->
+
+                <div id="config_dhcpd">
+                    <h3 class="heading-typeB">設定</h3>
+                    <p>下記の内容で/etc/dhcpd.confとしてcurlで保存します。</p>
+                    <pre class="brush: bash;">
+                        option subnet-mask 255.255.255.0;
+                        option routers 10.0.0.0;
+                        subnet 10.0.0.0 netmask 255.255.255.0 {
+                            range 10.0.0.1 10.0.0.10;
+                        }
+                    </pre>
+                    <pre class="brush: bash;">
+                        $ curl -O http://tokun.net/bookshelf/robot/dhcpd.conf
+                        $ cp dhcpd.conf /etc/dhcpd.conf
+                    </pre>
+                    <p>次のようにして起動します。</p>
+                    <pre class="brush: bash;">
+                        $ dhcpd
+                    </pre>
+                </div><!-- config_dhcpd -->
+            </div><!-- dhcpd -->
 
             <div id="conclusion">
                 <h2 class="heading-typeA">おわりに</h2>
@@ -77,6 +108,10 @@
                 <ul>
                     <li><a href="http://hyottokoaloha.hatenablog.com/entry/2015/02/24/000655">
                             Raspberry Piの無線LANアクセスポイント化</a></li>
+                    <li><a href="https://wiki.archlinux.org/index.php/Dhcpd">
+                            dhcpd - ArchWiki</a></li>
+                    <li><a href="https://wiki.archlinux.org/index.php/Software_access_point">
+                            Software access point - ArchWiki</a></li>
                 </ul>
             </section><!-- body -->
         </footer>
@@ -92,8 +127,15 @@
             <dd><a href="#hostapd">hostapd</a></dd>
             <dd>
                 <ol>
-                    <li><a href="#install">インストール</a></li>
-                    <li><a href="#config">設定</a></li>
+                    <li><a href="#install_hostapd">インストール</a></li>
+                    <li><a href="#config_hostapd">設定</a></li>
+                </ol>
+            </dd>
+            <dd><a href="#dhcpd">dhcpd</a></dd>
+            <dd>
+                <ol>
+                    <li><a href="#install_dhcpd">インストール</a></li>
+                    <li><a href="#config_dhcpd">設定</a></li>
                 </ol>
             </dd>
             <dd><a href="#conclusion">終わりに</a></li>
