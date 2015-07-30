@@ -1,0 +1,117 @@
+<?php include_once($_SERVER['DOCUMENT_ROOT'].'/common/template/template.php') ?>
+<?php set_head('LinuxでWi-Fiに接続する', __FILE__); ?>
+
+<div id="pageBodyMain">
+    <article>
+        <header class="articleDetailHead">
+            <h1 class="pageTitle">LinuxでWi-Fiに接続する</h1>
+        </header>
+
+        <section class="articleDetailBody" id="body">
+
+            <div id="objective">
+                <h2 class="heading-typeA">目的</h2>
+                <p>接続用アプリケーションをインストールしていないArchLinuxなど、GUIを使わない方法でWi-Fiに接続しなければならない場合があります。</p>
+                <p>今回はそんな時にwpa_supplicantを使ってWi-Fiに接続する方法についてです。</p>
+            </div><!-- objective -->
+
+            <div id="provide">
+                <h2 class="heading-typeA">準備</h2>
+                <p>まずは下記のものを用意してください</p>
+                <ol>
+                    <li>無線LANに接続できるLinuxマシン</li>
+                </ol>
+            </div><!-- provide -->
+
+            <div id="install">
+                <h2 class="heading-typeA">インストール</h2>
+                <p>ArchLinuxの場合は下記のようにしてインストールします。</p>
+                <pre class="brush: bash;">
+                    $ sudo pacman -Sy net-tools wpa_supplicant iw iproute wireless_tools
+                </pre>
+            </div><!-- install -->
+
+            <div id="scan">
+                <h2 class="heading-typeA">スキャン</h2>
+                <p>利用可能なアクセスポイントをスキャンします。</p>
+                <p>デバイス名はifconfigなどで調べておいてください。</p>
+                <pre class="brush: bash;">
+                    $ sudo iw dev wlan0 scan
+                    # または
+                    $ sudo iwlist wlan0 scan
+                </pre>
+                <p>大量の情報が表示されるのでSSIDだけgrepで表示させましょう。</p>
+                <pre class="brush: bash;">
+                    $ sudo iw dev wlan0 scan | grep -i -n ssid
+                    # または
+                    $ sudo iwlist wlan0 scan | grep -i -n ssid
+                </pre>
+            </div><!-- scan -->
+
+            <div id="connect">
+                <h2 class="heading-typeA">接続</h2>
+                <p>スキャンして得られたアクセスポイント名を用いて接続します。</p>
+                <p>wpa_supllicantを使って接続するので、設定ファイルを作成します。</p>
+                <p>まずは、wpa_passphraseを使って基本となるファイルを作成します。</p>
+                <pre class="brush: bash;">
+                    $ wpa_passphrase your_essid your_password > wpa_supplicant_your.conf
+                </pre>
+                <p>WPA2の場合はこれで十分です。WPAの場合は下記のようにさらに追記します。</p>
+                <pre class="brush: bash;">
+                    network={
+                        proto=WPA
+                        key_mgmt=WPA-PSK
+                        pairwise=CCMP
+                        group=CCMP
+                        priority=2
+                        ssid="your_essid"
+                        #psk="your_password"
+                        psk="**********your_number*************************"
+                    }
+                </pre>
+                <p>これを使って接続します。</p>
+                <pre class="brush: bash;">
+                    $ sudo wpa_supplicant -c ./wpa_supplicant_your.conf -i wlan0
+                </pre>
+            </div><!-- connect -->
+
+            <div id="conclusion">
+                <h2 class="heading-typeA">おわりに</h2>
+                <p>いかがでしたでしょうか。
+                わからないことなどがありましたら、ご質問だくさい。</p>
+                <p>2015/7/30</p>
+            </div><!-- conclusion -->
+
+        </section><!-- body -->
+
+        <footer class="articleDetailFoot">
+            <section id="body">
+                <h2 class="heading-typeC">参考サイト</h2>
+                <ul>
+                    <li><a href="https://wiki.archlinuxjp.org/index.php/%E3%83%AF%E3%82%A4%E3%83%A4%E3%83%AC%E3%82%B9%E8%A8%AD%E5%AE%9A">
+                       ワイヤレス設定-ArchWiki
+                    </a></li>
+                </ul>
+            </section><!-- body -->
+        </footer>
+    </article>
+</div><!-- pageBodyMain -->
+
+<div id="pageBodySub">
+    <nav class="localNavi">
+        <dl>
+            <dt>目次</dt>
+            <dd><a href="#objective">目的</a></dd>
+            <dd><a href="#provide">準備</a></dd>
+            <dd><a href="#thema1">テーマ1</a></dd>
+            <dd>
+                <ol>
+                    <li><a href="#thema1-1">テーマ1-1</a></li>
+                </ol>
+            </dd>
+            <dd><a href="#conclusion">終わりに</a></li>
+        </dl>
+    </nav>
+</div><!-- pageBodySub -->
+
+<?php set_foot(); ?>

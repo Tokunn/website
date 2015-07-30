@@ -74,6 +74,15 @@
                 </pre>
             </div><!-- print -->
 
+            <div id="own">
+                <h2 class="heading-typeA">コマンドのパッケージのチェック</h2>
+                <p>コマンドがどのパッケージでインストールされたのかを調べたい時には下記のように実行します。</p>
+                <p>この場合はifconfigを調べます。</p>
+                <pre class="brush: bash;">
+                    $ pacman -Qo `which ifconfig`
+                </pre>
+            </div><!-- own -->
+
             <div id="conclusion">
                 <h2 class="heading-typeA">おわりに</h2>
                 <p>いかがでしたでしょうか。
@@ -106,6 +115,7 @@
             <dd><a href="#update">アップデート</a></dd>
             <dd><a href="#find">検索</a></dd>
             <dd><a href="#print">表示</a></dd>
+            <dd><a href="#own">パッケージ</a></dd>
             <dd><a href="#conclusion">終わりに</a></li>
         </dl>
     </nav>
