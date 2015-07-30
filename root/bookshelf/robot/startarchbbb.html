@@ -20,8 +20,10 @@
                 <h2 class="heading-typeA">方法</h2>
                 <p>では、ここからはBeagleBoneBlackの起動を行っていきます。</p>
                 <p>BeagleBoneBlackはディスプレイにマイクロHDMIケーブルを使うのですが、高いので今回は使用せずに、ディスプレイなしでBeagleBoneBlackのセットアップを行います。
-                方法は、同じネットワークへ接続してsshで繋ぐ方法と、USB-Serialコンバータを使用してシリアルコンソールでログインする方法（さらにあと１つ方法）があります。
-                今回は前者の、ネットワークごしにログインします。この方法ではIPアドレスがわからなくても、sshで接続することができます。</p>
+                方法は、同じネットワークへ接続してsshで繋ぐ方法と、USB-Serialコンバータを使用してシリアルコンソールでログインする方法、クロスケーブルを使う方法があります。
+                今回は1つ目の、ネットワークごしにログインします。この方法ではIPアドレスがわからなくても、sshで接続することができます。</p>
+                <p>2015/7/30 追記<br />
+                USB-Serialコンバータを使用してシリアルコンソールでログインする方法を追記しました。<a href="#serialconsole">こちら</a>。</p>
                 <div id="provide">
                     <h3 class="heading-typeB">準備</h3>
                     <p>まずは下記のものを用意してください</p>
@@ -142,6 +144,46 @@
                             [root@alarm ~]#
                         </pre>
                     </div><!-- ssh -->
+                    <div id="serialconsole">
+                        <h3 class="heading-typeB">BeagleBoneBlackへ接続する(シリアルコンソール)</h3>
+                        <p>sshではなく、シリアルコンソールで接続する方法についてです。この方法では、sshが起動していない場合、ネットワークがない場合でも接続できます。</p>
+                        <p>まずは、仮想コンソールscreenをインストールします。</p>
+                        <pre class="brush: bash;">
+                            $ sudo pacman -Sy screen
+                        </pre>
+                        <p>次にUSB-SerialコンバータとBeagleBoneBlackを接続します。<p>
+                        <p>次のように接続してください。</p>
+                        <table>
+                            <tr>
+                                <th>BeagleBoneBlack</th>
+                                <th>USB-Serialコンバータ</th>
+                            </tr>
+                            <tr>
+                                <td>LANポート側から1つ目</td>
+                                <td>GND</td>
+                            </tr>
+                            <tr>
+                                <td>LANポート側から4つ目</td>
+                                <td>TX (OUTPUT)</td>
+                            </tr>
+                            <tr>
+                                <td>LANポート側から5つ目</td>
+                                <td>RX (INPUT)</td>
+                            </tr>
+                        </table>
+                        <p>LinuxマシンにUSB-Serialコンバータを接続して起動します。</p>
+                        <p>lsを使ってUSB-Serialコンバータのデバイス名をチェックします。</p>
+                        <pre class="brush: bash;">
+                            $ ls /dev/ttyUSB* /dev/ttyACM*
+                        </pre>
+                        <p>私の環境では、/dev/ttyUSB0として認識されました。</p>
+                        <p>下記のコマンドを打って接続します。デバイス名は各自置き換えてください。</p>
+                        <pre class="brush: bash;">
+                            $ sudo screen /dev/ttyUSB0 115200
+                        </pre>
+                        <p>これで接続できます。</p>
+                        <p>終了するときはctrl+a k yと3つ順に入力してください。</p>
+                    </div><!-- serialconsole -->
                 </div><!-- connect -->
 
             </div><!-- methods -->
@@ -160,6 +202,14 @@
             <section id="body">
                 <h2 class="heading-typeC">参考サイト</h2>
                 <ul>
+                    <a href="http://gadget.ichmy.0t0.jp/intro/beaglebone/console/">
+                        コンソールをつなごう(BBB編)
+                    </a>
+                </ul>
+                <ul>
+                    <a href="http://dekigl.hatenablog.jp/entry/2013/09/14/120342">
+                        BeagleBoneBlackの起動 - Angstrom
+                    </a>
                 </ul>
             </section><!-- body -->
         </footer>
@@ -181,6 +231,7 @@
                         <li><a href="#getip">IPアドレスを探す</a></li>
                         <li><a href="#ssh">SSHで接続する</a></li>
                     </ul>
+                    <li><a href=#serialconsole>シリアルコンソール</a></li>
                 </ol>
             </dd>
             <dd><a href="#conclusion">終わりに</a></li>
