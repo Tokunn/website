@@ -1,0 +1,7 @@
+Description='A basic static ethernet connection'
+Interface=wlan0
+Connection=wireless
+IP=static
+Address=('10.0.0.0/24')
+Gateway='10.0.0.0'
+DNS=('8.8.8.8')
