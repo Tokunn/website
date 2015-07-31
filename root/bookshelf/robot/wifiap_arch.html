@@ -93,6 +93,30 @@
                 </div><!-- config_dhcpd -->
             </div><!-- dhcpd -->
 
+            <div id="bridge-utils">
+                <h2 class="heading-typeA">bridge-utilsのインストール・設定</h2>
+                <div id="install_bridge-utils">
+                    <h3 class="heading-typeB">インストール</h3>
+                    <pre class="brush: bash;">
+                        $ sudo pacman -Sy bridge-utils
+                    </pre>
+                </div><!-- install -->
+
+                <div id="config_bridge-utils">
+                    <h3 class="heading-typeB">設定</h3>
+                    <p>下記のコマンドを実行してブリッジを作成します。</p>
+                    <pre class="brush: bash;">
+                        $ brctl addbr bridge_name
+                        $ brctl addif bridge_name wlan0
+                        $ brctl show
+                    </pre>
+                    <p>下記のコマンドを実行してブリッジをupにします。</p>
+                    <pre class="brush: bash;">
+                        $ ip link set up bridge_name
+                    </pre>
+                </div><!-- config_bridge-utils -->
+            </div><!-- bridge-utils -->
+
             <div id="conclusion">
                 <h2 class="heading-typeA">おわりに</h2>
                 <p>いかがでしたでしょうか。
@@ -136,6 +160,13 @@
                 <ol>
                     <li><a href="#install_dhcpd">インストール</a></li>
                     <li><a href="#config_dhcpd">設定</a></li>
+                </ol>
+            </dd>
+            <dd><a href="#dhcpd">bridge-utils</a></dd>
+            <dd>
+                <ol>
+                    <li><a href="#install_bridge-utils">インストール</a></li>
+                    <li><a href="#config_bridge-utils">設定</a></li>
                 </ol>
             </dd>
             <dd><a href="#conclusion">終わりに</a></li>
