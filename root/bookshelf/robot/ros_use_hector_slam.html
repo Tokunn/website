@@ -1,0 +1,103 @@
+<?php include_once($_SERVER['DOCUMENT_ROOT'].'/common/template/template.php') ?>
+<?php set_head('hector_slamを用いた地図作成', __FILE__); ?>
+
+<div id="pageBodyMain">
+    <article>
+        <header class="articleDetailHead">
+            <h1 class="pageTitle">hector_slamを用いた地図作成</h1>
+        </header>
+
+        <section class="articleDetailBody" id="body">
+
+            <div id="objective">
+                <h2 class="heading-typeA">目的</h2>
+                <p>ROSは、機能ごとにモジュールが分かれていて他の人が作ったモジュールを自分のプログラムに組み込むことが容易にできます。
+                今回は公開されているhector_slamというパッケージとレーザーレンジファインダを使って地図を作ってみたいと思います。</p>
+            </div><!-- objective -->
+
+            <div id="provide">
+                <h2 class="heading-typeA">準備</h2>
+                <p>まずは下記のものを用意してください</p>
+                <ol>
+                    <li>ROSがインストールされているマシン（<a href="00_setupros.html">前回作成したもの</a>）</li>
+                    <li>HOKUYO URG-04LX-UG01</li>
+                    <p>今回はレーザーレンジファインダとして北陽電機株式会社のレーザーレンジファインダ URG-04LX-UG01を使用します。
+                    USBバスパワーで駆動するため簡単に使うことができますが、5m程度の距離しか得ることができません。</p>
+                </ol>
+                <p>レーザーレンジファインダをパソコンに接続したら、一般ユーザーでもアクセスできるように、パーミッションを変更します。</p>
+                <pre class="brush: bash;">
+                    $ sudo chmod 666 /dev/ttyACM0
+                </pre>
+                <p>デバイス名ttyACM0は適宜変更してください。</p>
+            </div><!-- provide -->
+
+            <div id="download">
+                <h2 class="heading-typeA">ダウンロード</h2>
+                <p>今回はDaiki Maekawaさんのhector_hokuyo.launchを使わせていただきます。</p>
+                <p>githubからダウンロードしてきます。</p>
+                <pre class="brush: bash;">
+                    $ cd ~/catkin_ws/src
+                    $ git clone https://github.com/DaikiMaekawa/hector_slam_example.git
+                </pre>
+                <p>hokuyo-nodeはインストールしておきます。</p>
+                <pre class="brush: bash;">
+                    $ sudo apt-get install ros-indigo-hokuyo-node
+                </pre>
+            </div><!-- download -->
+
+            <div id="start_hector_hokuyo">
+                <h2 class="heading-typeA">起動</h2>
+                <p>hector_hokuyoをroslaunchで起動します。</p>
+                <pre class="brush: bash;">
+                    $ cd hector_slam_example/launch
+                    $ roslaunch hector_hokuyo.launch
+                </pre>
+                <p>レーザーレンジファインダとパソコンを持って周りを歩くと地図が作成されます。</p>
+            </div><!-- start_hector_hokuyo -->
+
+            <div id="save_map">
+                <h2 class="heading-typeA">保存</h2>
+                <p>map_serverを用いて、地図を保存します。</p>
+                <pre class="brush: bash;">
+                    $ rosrun map_server map_server -f ./my_map
+                </pre>
+            </div><!-- save_map -->
+
+            <div id="conclusion">
+                <h2 class="heading-typeA">おわりに</h2>
+                <p>いかがでしたでしょうか。
+                わからないことなどがありましたら、ご質問だくさい。</p>
+                <p>2015/8/7</p>
+            </div><!-- conclusion -->
+
+        </section><!-- body -->
+
+        <footer class="articleDetailFoot">
+            <section id="body">
+                <h2 class="heading-typeC">参考サイト</h2>
+                <ul>
+                    <li><a href="http://daikimaekawa.github.io/ros/2014/04/14/HectorSLAM02/">
+                            URG + hector_slamで地図を描いてみた </a></li>
+                    <li><a href="http://wiki.ros.org/ja/turtlebot_navigation/Tutorials/Build%20a%20map%20with%20SLAM">
+                            turtlebotによるSLAMを用いた地図作成</a></li>
+                </ul>
+            </section><!-- body -->
+        </footer>
+    </article>
+</div><!-- pageBodyMain -->
+
+<div id="pageBodySub">
+    <nav class="localNavi">
+        <dl>
+            <dt>目次</dt>
+            <dd><a href="#objective">目的</a></dd>
+            <dd><a href="#provide">準備</a></dd>
+            <dd><a href="#download">ダウンロード</a></dd>
+            <dd><a href="#start_hector_hokuyo">起動</a></dd>
+            <dd><a href="#save_map">保存</a></dd>
+            <dd><a href="#conclusion">終わりに</a></li>
+        </dl>
+    </nav>
+</div><!-- pageBodySub -->
+
+<?php set_foot(); ?>

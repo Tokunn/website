@@ -1,0 +1,104 @@
+<?php include_once($_SERVER['DOCUMENT_ROOT'].'/common/template/template.php') ?>
+<?php set_head('hector_slamとmove_baseを用いた自律移動', __FILE__); ?>
+
+<div id="pageBodyMain">
+    <article>
+        <header class="articleDetailHead">
+            <h1 class="pageTitle">hector_slamとmove_baseを用いた自律移動</h1>
+        </header>
+
+        <section class="articleDetailBody" id="body">
+
+            <div id="objective">
+                <h2 class="heading-typeA">目的</h2>
+                <p><a href="ros_use_hector_slam.html">前回</a>に続いて、Daiki Maekawsさんのサイトを参考にしながら、move_baseの動作を確認してみます。</p>
+                <p>Roombaがないため、自分で持って移動します。</p>
+            </div><!-- objective -->
+
+            <div id="provide">
+                <h2 class="heading-typeA">準備</h2>
+                <p>まずは下記のものを用意してください</p>
+                <ol>
+                    <li>ROSがインストールされているマシン（<a href="00_setupros.html">前回作成したもの</a>）</li>
+                    <li>HOKUYO URG-04LX-UG01</li>
+                    <p>今回はレーザーレンジファインダとして北陽電機株式会社のレーザーレンジファインダ URG-04LX-UG01を使用します。
+                    USBバスパワーで駆動するため簡単に使うことができますが、5m程度の距離しか得ることができません。</p>
+                </ol>
+                <p>レーザーレンジファインダをパソコンに接続したら、一般ユーザーでもアクセスできるように、パーミッションを変更します。</p>
+                <pre class="brush: bash;">
+                    $ sudo chmod 666 /dev/ttyACM0
+                </pre>
+                <p>デバイス名ttyACM0は適宜変更してください。</p>
+                <p>hokuyo-nodeもインストールしておきます。</p>
+                <pre class="brush: bash;">
+                    $ sudo apt-get install ros-indigo-hokuyo-node
+                </pre>
+            </div><!-- provide -->
+
+            <div id="download">
+                <h2 class="heading-typeA">ダウンロード</h2>
+                <p>今回もDaiki Maekawaさんのnavigation2d_exampleを使わせていただきます。</p>
+                <p>githubからダウンロードしてきます。</p>
+                <pre class="brush: bash;">
+                    $ cd ~/catkin_ws/src
+                    $ git clone https://github.com/DaikiMaekawa/ros-navigation2d-example
+                </pre>
+            </div><!-- download -->
+
+            <div id="start_move_base">
+                <h2 class="heading-typeA">起動</h2>
+                <p>move_baseをroslaunchで起動します。</p>
+                <pre class="brush: bash;">
+                    $ cd ros-navigation2d-example/launch
+                    $ roslaunch move_base.launch
+                </pre>
+                <p>rviz上で2D Nav Goalボタンを押して、目的地をクリック＆方向にドラッグでゴールを指定すると進路がrviz上に表示され、ロボットの動きが/cmd_velに配信されます。</p>
+            </div><!-- start_move_base -->
+
+            <div id="cmd_vel">
+                <h2 class="heading-typeA">cmd_velの確認</h2>
+                <pre class="brush: bash;">
+                    $ rostopic echo cmd_vel
+                </pre>
+                <p>ゴールを指定すると、動作目標が配信されるのを確認できます。</p>
+                <p>レーザーレンジファインダを持って指示通りに移動すると、ゴール付近で終了します。</p>
+            </div><!-- cmd_vel -->
+
+            <div id="conclusion">
+                <h2 class="heading-typeA">おわりに</h2>
+                <p>いかがでしたでしょうか。
+                わからないことなどがありましたら、ご質問だくさい。</p>
+                <p>2015/8/7</p>
+            </div><!-- conclusion -->
+
+        </section><!-- body -->
+
+        <footer class="articleDetailFoot">
+            <section id="body">
+                <h2 class="heading-typeC">参考サイト</h2>
+                <ul>
+                    <li><a href="http://daikimaekawa.github.io/ros/2014/04/20/Navigation2d/">
+                            hector_slamと2D Navigationを組み合わせてRoombaを自律移動させる</a></li>
+                    <li><a href="http://wiki.ros.org/ja/turtlebot_navigation/Tutorials/Autonomously%20navigate%20in%20a%20known%20map">
+                            既知の地図を用いたTurtleBotの自律ナビゲーション</a></li>
+                </ul>
+            </section><!-- body -->
+        </footer>
+    </article>
+</div><!-- pageBodyMain -->
+
+<div id="pageBodySub">
+    <nav class="localNavi">
+        <dl>
+            <dt>目次</dt>
+            <dd><a href="#objective">目的</a></dd>
+            <dd><a href="#provide">準備</a></dd>
+            <dd><a href="#download">ダウンロード</a></dd>
+            <dd><a href="#start_move_base">起動</a></dd>
+            <dd><a href="#cmd_vel">確認</a></dd>
+            <dd><a href="#conclusion">終わりに</a></li>
+        </dl>
+    </nav>
+</div><!-- pageBodySub -->
+
+<?php set_foot(); ?>
