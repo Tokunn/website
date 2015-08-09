@@ -63,6 +63,11 @@ $bookshelf_html = <<< EOF
                     <li>BeagleBoneBlack</li>
                 </ul>
             </div><!-- page-description-list -->
+            <div class="page-description-list">
+                <ul>
+                    <li>ROS</li>
+                </ul>
+            </div><!-- page-description-list -->
         </div><!-- page-description -->
     </section>
 

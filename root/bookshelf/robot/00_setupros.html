@@ -1,10 +1,10 @@
 <?php include_once($_SERVER['DOCUMENT_ROOT'].'/common/template/template.php') ?>
-<?php set_head('ROSのインストール', __FILE__); ?>
+<?php set_head('ROSのインストール(Ubuntu・ArchLinux)', __FILE__); ?>
 
 <div id="pageBodyMain">
     <article>
         <header class="articleDetailHead">
-            <h1 class="pageTitle">ROSのインストール</h1>
+            <h1 class="pageTitle">ROSのインストール(Ubuntu・ArchLinux)</h1>
         </header>
 
         <section class="articleDetailBody" id="body">
@@ -12,23 +12,27 @@
             <div id="objective">
                 <h2 class="heading-typeA">目的</h2>
                 <p>Robot Operating SystemをUbuntuにインストールします。<p>
+                <p>2015/8/7 追記<br />
+                ArchLinuxでのインストール方法を追記しました。</p>
             </div><!-- objective -->
 
-            <div id="methods">
-                <h2 class="heading-typeA">方法</h2>
-                <div id="provide">
-                    <h3 class="heading-typeB">準備</h3>
-                    <p>まずは下記のものを用意してください</p>
-                    <ol>
-                        <li>Ubuntu14.04マシン</li>
-                        <li>インターネット環境</li>
-                    </ol>
-                    <p>(1) Ubuntuは15.04で試したのですが、依存関係がうまくいかないため14.04で行います。<br />
-                    indigoの対応バージョンは13.10と14.04のみのようです。
-                    Ubuntu14.10と15.04を使用したい場合は、indigoではなくjadeをインストールしてください。</p>
-                    <p>今回はUbuntu14.04とindigoを使用します。</p>
-                </div><!-- provide -->
+            <div id="provide">
+                <h2 class="heading-typeA">準備</h2>
+                <p>まずは下記のものを用意してください</p>
+                <ol>
+                    <li>Ubuntu14.04マシン or ArchLinuxマシン</li>
+                    <li>インターネット環境</li>
+                </ol>
+                <p>(1) Ubuntuは15.04で試したのですが、依存関係がうまくいかないため14.04で行います。<br />
+                indigoの対応バージョンは13.10と14.04のみのようです。
+                Ubuntu14.10と15.04を使用したい場合は、indigoではなくjadeをインストールしてください。</p>
+                <p>ArchLinuxは2015/8/7時点での最新のものです。</p>
+                <p>今回は(Ubuntu14.04 or ArchLinux)とindigoを使用します。</p>
+            </div><!-- provide -->
 
+            <div id="ubuntu">
+                <h2 class="heading-typeA">Ubuntu14.04</h2>
+                <p>Ubuntu14.04の場合です。</p>
                 <div id="sourceslist">
                     <h3 class="heading-typeB">sources.listのセットアップ</h3>
                     <p>デフォルトではpackages.ros.orgのパッケージを登録していないため、登録を行います。</p>
@@ -58,6 +62,57 @@
                         $ sudo apt-get install python-rosinstall
                     </pre>
                 </div><!-- install -->
+            </div><!-- ubuntu -->
+
+            <div id="arch">
+                <h2 class="heading-typeA">ArchLinux</h2>
+                <p>ArchLinuxの場合です。</p>
+                <p>まずは、yaourtをインストールしておいてください。</p>
+                <div id="arch_install">
+                    <h3 class="heading-typeB">インストール</h3>
+                    <p>インストールします。</p>
+                    <pre class="brush: bash;">
+                        $ yaourt -S ros-indigo-desktop-full --needed --noconfirm
+                    </pre>
+                    <p>ただし現在(2015/8/7)、このまま実行すると下記のようなエラーがでます。</p>
+                    <pre class="brush: bash;">
+                        ==> ERROR: A failure occurred in build().
+                        Abortin...
+                        ==> ERROR: Makepkg was unable to build ros-indigo-catkin.
+                    </pre>
+                    <p>遡って読んでみると、</p>
+                    <pre class="brush: bash;">
+                        ImportError: "from catkin_pkg.package import parse_package" failed: No module named catkin_pkg.package
+                        Make sure that you have installed "catkin_pkg", it is up to date and on the PYTHONPATH.
+                    </pre>
+                    <p>ros-indigo-catkinのインストール中に/tmp/yaourt-tmp-username/aur-ros-indigo-catkin/src/catkin/cmake/parse_package_xml.pyのファイルがcatkin_pkg.packageをimportできなく怒ってるようです。</p>
+                    <p>まずは、catkin-pkgをインストールしましょう。</p>
+                    <pre class="brush: bash;">
+                        $ yaourt -S python-catkin-pkg --noconfirm --needed
+                    </pre>
+                    <p>というわけで、catkin_pkgがどこにあるのか検索すると、</p>
+                    <pre class="brush: bash;">
+                        $ sudo find / -name "catkin_pkg"
+                        /usr/lib/python3.4/site-packages/catkin_pkg
+                    </pre>
+                    <p>検索結果のフォルダをPYTHONPATHへ登録します。
+                    PYTHONPATHへ登録すると、pythonスクリプトのインクルードディレクトリに登録されます。</p>
+                    <pre class="brush: bash;">
+                        PYTHONPATH=/usr/lib/python3.4/site-packages/
+                    </pre>
+                    <p>登録したので、catkinがインストールできるか試してみましょう。</p>
+                    <pre class="brush: bash;">
+                        $ yaourt -S ros-indigo-catkin --noconfirm --needed
+                    </pre>
+                    <p>うまくいきましたか？それでは、もとのインストールに戻りましょう。</p>
+                    <pre class="brush: bash;">
+                        $ yaourt -S ros-indigo-desktop-full --needed --noconfirm
+                    </pre>
+                </div><!-- arch_install -->
+            </div><!-- arch -->
+
+            <div id="common">
+                <h2 class="heading-typeA">共通手順</h2>
                 <div id="init">
                     <h3 class="heading-typeB">rosdepの初期化</h3>
                     <p>rosdepを初期化します。</p>
@@ -66,13 +121,14 @@
                         $ rosdep update
                     </pre>
                 </div><!-- init -->
-            </div><!-- methods -->
+            </div><!-- common -->
 
             <div id="conclusion">
                 <h2 class="heading-typeA">おわりに</h2>
                 <p>いかがでしたでしょうか。
                 わからないことなどがありましたら、ご質問だくさい。</p>
                 <p>2015/7/25</p>
+                <p>2015/8/7 追記</p>
             </div><!-- conclusion -->
 
         </section><!-- body -->
@@ -82,6 +138,9 @@
                 <h2 class="heading-typeC">参考サイト</h2>
                 <ul>
                     <li><a href="http://wiki.ros.org/ja/indigo/Installation/Ubuntu">ja/indigo/installation/ubuntu</a></li>
+                    <li><a href="http://wiki.ros.org/indigo/Installation/Arch">indigo/installation/Arch</a></li>
+                    <li><a href="http://docs.python.jp/2/tutorial/modules.html">モジュール Python2.7ja1 documentation</a></li>
+                    <li><a href="http://qiita.com/ainehanta0130/items/51ed27a81379671b8fee">ArchlinuxにさくっとROS Indigoをインストールする</a></li>
                 </ul>
             </section><!-- body -->
         </footer>
@@ -93,14 +152,24 @@
         <dl>
             <dt>目次</dt>
             <dd><a href="#objective">目的</a></dd>
+            <dd><a href="#provide">準備</a></dd>
             <dd>
-                <a href="#methods">方法</a>
+                <a href="#ubuntu">Ubuntu</a>
                 <ol>
-                    <li><a href="#provide">準備</a></li>
                     <li><a href="#sourceslist">sourceslist</a></li>
                     <li><a href="#key">鍵の設定</a></li>
                     <li><a href="#update">アップデート</a></li>
                     <li><a href="#install">インストール</a></li>
+                </ol>
+            </dd>
+            <dd>
+                <a href="#arch">ArchLinux</a>
+                <ol>
+                    <li><a href="#arch_install">インストール</a></li>
+                </ol>
+            <dd>
+                <a href="#common">共通手順</a></li>
+                <ol>
                     <li><a href="#init">rosdepの初期化</a></li>
                 </ol>
             </dd>
