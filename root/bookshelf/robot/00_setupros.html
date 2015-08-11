@@ -109,6 +109,43 @@
                         $ yaourt -S ros-indigo-desktop-full --needed --noconfirm
                     </pre>
                 </div><!-- arch_install -->
+
+                <div id="conflict_catkin">
+                    <h3 class="heading-typeB">catkin-pkgの競合</h3>
+                    <p>最後に、インストール途中でcatkin_pkgが競合して、python-catkin-pkgが削除されてpython2-catkin-pkgがインストールされます。</p>
+                    <p>ArchLinuxで後にcatkin_makeをした時にうまくできない場合は、ROSシステムがpython-catkin-pkgのpython3バージョンpython2バージョン両方に依存しているにもかかわらず、python2-catkin-pkgのみしか入っていないためだと考えられます。</p>
+                    <pre class="brush: bash;">
+                        $ # catkinワークスペースで
+                        $ catkin_mae
+                        # 〜略〜
+                        ImportError: "from catkin_pkg.package import parse_package" failed: No module named 'catkin_pkg'
+                        Make sure that you have installed "catkin_pkg", it is up to date and on the PYTHONPATH.
+                        CMake Error at /opt/ros/indigo/share/catkin/cmake/safe_execute_process.cmake:11 (message):
+                        # 〜略〜
+                    </pre>
+                    <p>ここでyaourtを使ってpython3のバージョンをインストールしようとすると、競合を怒られてインストールできません。</p>
+                    <pre class="brush: bash;">
+                        $ yaourt -S python-catkin-pkg
+                        # 〜略〜
+                        looking for conflicting packages...
+                        :: python-catkin-pkg and python2-catkin-pkg are in conflict (python2-catkin_pkg). Remove python2-catkin-pkg? [y/N] y
+                        error: failed to prepare transaction (could not satisfy dependencies)
+                        :: python2-rosdep: requires python2-catkin-pkg
+                        :: ros-indigo-catkin: requires python2-catkin-pkg
+                        :: ros-indigo-rospack: requires python2-catkin-pkg
+                        # 〜略〜
+                    </pre>
+                    <p>そのため、pipを使ってアップデートしてます。</p>
+                    <pre class="brush: bash;">
+                        $ sudo pip install -U catkin_pkg
+                    </pre>
+                    <p>findで確認してみると、3.4にも2.7にもあることが確認できます。</p>
+                    <pre class="brush: bash;">
+                        $ sudo find / -name "catkin_pkg"
+                        $ catkin_make
+                    </pre>
+                    <p>これでcatkin_makeも実行できるようになりました。</p>
+                </div><!-- conflict_catkin -->
             </div><!-- arch -->
 
             <div id="common">
@@ -128,7 +165,8 @@
                 <p>いかがでしたでしょうか。
                 わからないことなどがありましたら、ご質問だくさい。</p>
                 <p>2015/7/25</p>
-                <p>2015/8/7 追記</p>
+                <p>2015/8/ 7 追記<br />
+                   2015/8/11 追記</p>
             </div><!-- conclusion -->
 
         </section><!-- body -->
@@ -166,6 +204,7 @@
                 <a href="#arch">ArchLinux</a>
                 <ol>
                     <li><a href="#arch_install">インストール</a></li>
+                    <li><a href="#conflict_catkin">catkin-pkgの競合</a></li>
                 </ol>
             <dd>
                 <a href="#common">共通手順</a></li>
