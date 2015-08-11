@@ -1,0 +1,94 @@
+<?php include_once($_SERVER['DOCUMENT_ROOT'].'/common/template/template.php') ?>
+<?php set_head('2台のパソコンでROSを実行', __FILE__); ?>
+
+<div id="pageBodyMain">
+    <article>
+        <header class="articleDetailHead">
+            <h1 class="pageTitle">2台のパソコンでROSを実行</h1>
+        </header>
+
+        <section class="articleDetailBody" id="body">
+
+            <div id="objective">
+                <h2 class="heading-typeA">目的</h2>
+                <p>ROSでは、ノードとノードを分離させて別のパソコンで動作させることができます。
+                この方法を使えば、ロボット側のパソコンでroscoreや制御用ノードを実行して、ワークステーションでrvizを実行し指示を出すことができます。
+                同じwi-fiに接続すれば、自分は動くことなく制御やチェックが可能です。</p>
+            </div><!-- objective -->
+
+            <div id="provide">
+                <h2 class="heading-typeA">準備</h2>
+                <p>まずは下記のものを用意してください</p>
+                <ol>
+                    <li>ROSがインストールされたマシン(ロボット側)</li>
+                    <li>ROSがインストールされたワークステーション</li>
+                </ol>
+                <p>2台とも同じネットワークに接続してください。</p>
+            </div><!-- provide -->
+
+            <div id="setting">
+                <h2 class="heading-typeA">設定</h2>
+                <p>まずは、ロボット側のマシンでROSを起動します。</p>
+                <pre class="brush: bash;">
+                    $ roscore
+                </pre>
+                <p>次に、ROS_MASTER_URI(ゆーあーるあい エルじゃなくてアイ)をroscoreを起動したマシンに設定します。</p>
+                <p>ロボット側のマシンでは環境変数をチェックすると、すでにlocalhostになっています。</p>
+                <pre class="brush: bash;">
+                    $ export | grep ROS_MASTER_URI
+                    ROS_MASTER_URI=http://localhost:11311
+                </pre>
+                <p>ROSは11311番ポートを使って通信してるようですね。</p>
+                <pre class="brush: bash;">
+                    $ nmap -p11311 localhost
+                    11311/tcp open unknown
+                </pre>
+                <p>開いていますね。</p>
+                <p>ワークステーションでも、roscoreを起動したマシン(今回はロボット側)のIPをROS_MASTER_URIに設定します。</p>
+                <p>roscoreを起動したマシンのIPアドレスは<a href="/bookshelf/linux/staticip.html">こちらを参考に固定</a>しておいてください。</p>
+                <pre class="brush: bash;">
+                    # この場合は192.168.1.6
+                    $ export ROS_MASTER_URI=http://192.168.1.6:11311
+                </pre>
+                <p>ROS_MASTER_URIの値を確認して正しく設定されていれば完了です。</p>
+                <pre class="brush: bash;">
+                    $ export | grep ROS_MASTER_URI
+                    ROS_MASTER_URI=http://192.168.1.6:11311
+                </pre>
+                <p>ワークステーション側で実行されるノードはロボット側のroscoreを通じてノードと通信することができます。</p>
+            </div><!-- setting -->
+
+            <div id="conclusion">
+                <h2 class="heading-typeA">おわりに</h2>
+                <p>いかがでしたでしょうか。
+                わからないことなどがありましたら、ご質問だくさい。</p>
+                <p>2015/8/11</p>
+            </div><!-- conclusion -->
+
+        </section><!-- body -->
+
+        <footer class="articleDetailFoot">
+            <section id="body">
+                <h2 class="heading-typeC">参考サイト</h2>
+                <ul>
+                    <li><a href="http://wiki.ros.org/ja/ROS/Tutorials/MultipleMachines">
+                            複数のマシン上でROSを実行する</a></li>
+                </ul>
+            </section><!-- body -->
+        </footer>
+    </article>
+</div><!-- pageBodyMain -->
+
+<div id="pageBodySub">
+    <nav class="localNavi">
+        <dl>
+            <dt>目次</dt>
+            <dd><a href="#objective">目的</a></dd>
+            <dd><a href="#provide">準備</a></dd>
+            <dd><a href="#setting">設定</a></dd>
+            <dd><a href="#conclusion">終わりに</a></li>
+        </dl>
+    </nav>
+</div><!-- pageBodySub -->
+
+<?php set_foot(); ?>
