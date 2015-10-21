@@ -95,6 +95,16 @@
                         <pre class="brush: bash;">
                             $ sudo reboot
                         </pre>
+                        <p>2015/10/21追記<br />
+                        上記方法ではうまくいかない場合があります。
+                        その場合は下記方法を試してみてください。</p>
+                        <pre class="brush: bash;">
+                            $ sudo systemctl stop netctl-ifplugd@eth0
+                            $ sudo netctl stop-all
+                            $ sudo systemctl disable netctl-ifplugd@eth0.service
+                            $ sudo systemctl enable netctl@eth0
+                            $ sudo netctl enable staticip
+                        </pre>
                     </div><!-- permanent_arch -->
 
                     <div id="permanent_ubuntu">
@@ -139,6 +149,7 @@
             <section id="body">
                 <h2 class="heading-typeC">参考サイト</h2>
                 <ul>
+                    <li><a href="https://www.netanote.com/2014/05/static-ip-on-arch-linux/">Arch Linuxで固定IP設定にはまる</a></li>
                 </ul>
             </section><!-- body -->
         </footer>
